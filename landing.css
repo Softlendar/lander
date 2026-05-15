@@ -1,0 +1,509 @@
+/* LANDING — Softlendar brand landing page
+ * ===================================================================================
+ * Top 30%: gradient bg + glowing sun logo
+ * Bottom 70%: interType warm gradient + context card
+ * =================================================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family:
+        system-ui,
+        -apple-system,
+        "Segoe UI",
+        Roboto,
+        sans-serif;
+    line-height: 1.6;
+    color: #1a0a2e;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===================================================================================
+ * TOP 30% — Glowing Sun Logo Section
+ * =================================================================================== */
+
+.hero-section {
+    height: 30vh;
+    min-height: 240px;
+    background: linear-gradient(
+        180deg,
+        #1a0a2e 0%,
+        #2a1a5e 30%,
+        #4a2a7e 60%,
+        #6a3a8e 100%
+    );
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Smooth fade to gradient section below */
+.hero-section::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    background: linear-gradient(180deg, transparent 0%, #fff5e6 100%);
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Glowing sun */
+.sun-logo {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+.sun-ball {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle at 30% 30%,
+        #fff8e1,
+        #ffd54f 40%,
+        #ff8f00 100%
+    );
+    box-shadow:
+        0 0 30px rgba(255, 213, 79, 0.6),
+        0 0 60px rgba(255, 213, 79, 0.4),
+        0 0 100px rgba(255, 143, 0, 0.25);
+    animation: sun-pulse 3s ease-in-out infinite;
+    position: relative;
+}
+
+/* Inner glow ring */
+.sun-ball::before {
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 213, 79, 0.15);
+    animation: sun-ring 3s ease-in-out infinite;
+}
+
+.sun-ball::after {
+    content: "";
+    position: absolute;
+    top: -18px;
+    left: -18px;
+    right: -18px;
+    bottom: -18px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 213, 79, 0.08);
+    animation: sun-ring 3s ease-in-out infinite 0.5s;
+}
+
+@keyframes sun-pulse {
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow:
+            0 0 30px rgba(255, 213, 79, 0.6),
+            0 0 60px rgba(255, 213, 79, 0.4),
+            0 0 100px rgba(255, 143, 0, 0.25);
+    }
+    50% {
+        transform: scale(1.06);
+        box-shadow:
+            0 0 40px rgba(255, 213, 79, 0.8),
+            0 0 80px rgba(255, 213, 79, 0.5),
+            0 0 120px rgba(255, 143, 0, 0.35);
+    }
+}
+
+@keyframes sun-ring {
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scale(1.15);
+        opacity: 0.2;
+    }
+}
+
+/* Title below the sun */
+.hero-title {
+    margin-top: 12px;
+    font-size: clamp(1.6rem, 4vw, 2.6rem);
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.02em;
+    text-align: center;
+    z-index: 1;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Subtitle */
+.hero-sub {
+    font-size: clamp(0.8rem, 2vw, 1rem);
+    color: rgba(255, 255, 255, 0.65);
+    margin-top: 4px;
+    z-index: 1;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+}
+
+/* ===================================================================================
+ * BOTTOM 70% — Gradient Section (interType style)
+ * =================================================================================== */
+
+.gradient-section {
+    flex: 1;
+    background: radial-gradient(
+        ellipse at top,
+        #fff5e6 0%,
+        #ffe0b2 40%,
+        #ffb3b3 100%
+    );
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    text-align: center;
+}
+
+.context-card {
+    max-width: 640px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(8px);
+    border-radius: 24px;
+    padding: 36px 32px;
+    border: 2px solid rgba(255, 140, 66, 0.25);
+    box-shadow: 0 8px 40px rgba(255, 140, 66, 0.12);
+    animation: spring-up 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes spring-up {
+    0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.context-card p {
+    font-size: clamp(1rem, 2.5vw, 1.15rem);
+    color: #3a2a5e;
+    margin-bottom: 16px;
+    line-height: 1.7;
+}
+
+.context-card p:last-of-type {
+    margin-bottom: 0;
+}
+
+/* Badge row */
+.badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin: 20px 0 24px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    background: rgba(255, 140, 66, 0.12);
+    color: #d4542e;
+    border: 1px solid rgba(255, 140, 66, 0.2);
+}
+
+/* Links row */
+.links-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+    margin-top: 24px;
+}
+
+.link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    border-radius: 40px;
+    font-size: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+.link-btn:hover {
+    transform: scale(1.05);
+}
+
+.link-btn:active {
+    transform: scale(0.96);
+}
+
+.link-btn.primary {
+    background: linear-gradient(135deg, #ff8c42, #ff3c7f);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(255, 60, 127, 0.3);
+}
+
+.link-btn.primary:hover {
+    box-shadow: 0 6px 28px rgba(255, 60, 127, 0.45);
+}
+
+.link-btn.secondary {
+    background: rgba(26, 10, 46, 0.06);
+    color: #1a0a2e;
+    border: 2px solid rgba(26, 10, 46, 0.12);
+}
+
+.link-btn.secondary:hover {
+    background: rgba(26, 10, 46, 0.1);
+}
+
+.link-btn.future {
+    background: rgba(26, 10, 46, 0.03);
+    color: rgba(26, 10, 46, 0.45);
+    border: 2px dashed rgba(26, 10, 46, 0.15);
+    cursor: not-allowed;
+    font-style: italic;
+}
+
+/* Paws decoration */
+.paws {
+    font-size: 1.8rem;
+    letter-spacing: 8px;
+    margin-top: 28px;
+    opacity: 0.5;
+    animation: wiggle 2s ease-in-out infinite;
+}
+
+@keyframes wiggle {
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(-6deg);
+    }
+    75% {
+        transform: rotate(6deg);
+    }
+}
+
+.footer-note {
+    margin-top: 16px;
+    font-size: 0.8rem;
+    color: rgba(26, 10, 46, 0.35);
+    font-style: italic;
+}
+
+/* ===================================================================================
+ * RESPONSIVE
+ * =================================================================================== */
+
+@media (max-width: 480px) {
+    .hero-section {
+        min-height: 200px;
+    }
+
+    .sun-logo {
+        width: 80px;
+        height: 80px;
+    }
+
+    .sun-ball {
+        width: 48px;
+        height: 48px;
+    }
+
+    .context-card {
+        padding: 24px 18px;
+    }
+
+    .links-row {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .link-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ===================================================================================
+ * HERO ROW & CAT IMAGES (moved from inline HTML)
+ * =================================================================================== */
+
+.hero-section {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-evenly !important;
+}
+.hero-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    flex: 1;
+}
+.hero-row-top {
+    align-items: center;
+}
+.hero-row-mid {
+    align-items: center;
+}
+.hero-row-bot {
+    align-items: flex-end;
+    padding-bottom: 6px;
+}
+
+/* Cat images: vertically centered, absolutely positioned, beside the sun */
+.cat-img {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 100px;
+    width: auto;
+    border-radius: 16px;
+    opacity: 0.6;
+    pointer-events: none;
+    object-fit: cover;
+}
+.cat-left {
+    left: 0;
+    width: calc(50% - 50px);
+}
+.cat-right {
+    right: 0;
+    width: calc(50% - 50px);
+}
+
+/* Responsive: smaller cats on mobile */
+@media (max-width: 480px) {
+    .cat-img {
+        height: 80px;
+        opacity: 0.4;
+    }
+    .cat-left {
+        left: 0;
+        width: calc(50% - 40px);
+    }
+    .cat-right {
+        right: 0;
+        width: calc(50% - 40px);
+    }
+}
+
+/* ===================================================================================
+ * LOGO MARQUEE — Product logos swim by
+ * =================================================================================== */
+
+.logo-marquee {
+    overflow: hidden;
+    padding: 40px 0;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 140, 66, 0.1),
+        rgba(255, 60, 127, 0.1)
+    );
+    border-top: 2px solid rgba(255, 140, 66, 0.2);
+    border-bottom: 2px solid rgba(255, 140, 66, 0.2);
+}
+
+.marquee-track {
+    display: flex;
+    gap: 80px;
+    width: max-content;
+    animation: marquee-swim 9s linear infinite;
+}
+
+.marquee-track:hover {
+    animation-play-state: paused;
+}
+
+.marquee-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-width: 100px;
+    cursor: pointer;
+}
+
+.marquee-item svg {
+    width: 64px;
+    height: 64px;
+    filter: drop-shadow(0 4px 12px rgba(255, 140, 66, 0.3));
+    transition: transform 0.3s ease;
+}
+
+.marquee-item:hover svg {
+    transform: scale(1.2);
+}
+
+.marquee-item span {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a0a2e;
+    text-transform: lowercase;
+    letter-spacing: 1px;
+}
+
+@keyframes marquee-swim {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* ===================================================================================
+ * RESPONSIVE — Logo Marquee
+ * =================================================================================== */
+
+@media (max-width: 480px) {
+    .marquee-item svg {
+        width: 48px;
+        height: 48px;
+    }
+    .marquee-item span {
+        font-size: 12px;
+    }
+    .marquee-track {
+        gap: 50px;
+    }
+}
