@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>404 — not found</title>
+<link rel="stylesheet" href="landing.css" />
+<style>
+.error-page {
+    height: 100vh;
+    background: #1a0a2e;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #e0d5f0;
+    padding: 24px;
+}
+.error-code {
+    font-size: clamp(3rem, 10vw, 6rem);
+    font-weight: 900;
+    color: #ff8c42;
+    margin-bottom: 12px;
+}
+.error-msg {
+    font-size: 1.2rem;
+    margin-bottom: 28px;
+    opacity: 0.7;
+}
+.back-home {
+    padding: 12px 28px;
+    border-radius: 40px;
+    background: linear-gradient(135deg, #ff8c42, #ff3c7f);
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 4px 20px rgba(255, 60, 127, 0.3);
+}
+.back-home:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 28px rgba(255, 60, 127, 0.45);
+}
+</style>
+</head>
+<body>
+    <section class="error-page">
+        <div class="error-code">404</div>
+        <p class="error-msg">that project doesn't exist (yet)</p>
+        <a href="/" class="back-home">← back to softlendar</a>
+    </section>
+</body>
+</html>

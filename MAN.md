@@ -82,8 +82,12 @@ Kep this man handy so you don't forget!
 
 ### var:2 — termirator landing update
 
-- index.html — future project links removed; marquee labels removed (logos only); termirator_logo.svg, nametermer_logo.svg, haster_logo.svg, setomoly_logo.svg, brose_logo.svg, serch_logo.svg added to marquee; terminal section added with 3 contexts (softlendar/cyberdyne/termitoria); tab autocomplete; termirator added alongside catlearning.fyi; favicon replaced with softlendar_logo.svg
-- landing.css — terminal styles added (dark card, prompt, output, input, scrollbar); badge categories organized; badge-float animation added
+- index.html — future project links removed; marquee labels removed (logos only); nav bar added with smooth-scroll anchors; termirator_logo.svg, nametermer_logo.svg, haster_logo.svg, setomoly_logo.svg, brose_logo.svg, serch_logo.svg added to marquee; terminal section added with 3 contexts (softlendar/cyberdyne/termitoria); tab autocomplete; termirator added alongside catlearning.fyi; contact form added with email backend; favicon replaced with softlendar_logo.svg
+- landing.css — terminal styles added (dark card, prompt, output, input, scrollbar); badge categories organized; badge-float animation added; contact form styles added (gradient bg, frosted card, animated button with loader); nav bar styles added
+- main.py — Flask backend with /, /contact (POST), /api/projects, /api/health, and dynamic project detail routes (/softlendar, /catlearning, /termirator, /brose, /serch, /nametermer, /haster, /setomoly, /redarbot, /dobart, /bylothon)
+- project.html — project detail page template with logo, tagline, description, stack, status, and visit button
+- 404.html — dark theme 404 page with back link
+- .env.example + requirements.txt — email config and Python dependencies
 - man.md — commit log updated
 - termirator_logo.svg — hex frame T-prompt with blink cursor
 - nametermer_logo.svg — wifi mark with orange N

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- outer friendly circle -->
+  <circle cx="50" cy="50" r="42" fill="none" stroke="#ff8c42" stroke-width="3"/>
+  <!-- inner ring -->
+  <circle cx="50" cy="50" r="26" fill="none" stroke="#ff3c7f" stroke-width="4"/>
+  <!-- 3 dots left -->
+  <circle cx="16" cy="50" r="5" fill="#ff8c42"/>
+  <circle cx="24" cy="28" r="5" fill="#ff8c42"/>
+  <circle cx="24" cy="72" r="5" fill="#ff8c42"/>
+  <!-- 3 dots right -->
+  <circle cx="84" cy="50" r="5" fill="#ff8c42"/>
+  <circle cx="76" cy="28" r="5" fill="#ff8c42"/>
+  <circle cx="76" cy="72" r="5" fill="#ff8c42"/>
+  <!-- W letter in center -->
+  <path d="M38 42 L44 58 L50 48 L56 58 L62 42" fill="none" stroke="#ff3c7f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -27,7 +27,20 @@
         <link rel="icon" href="softlendar_logo.svg" />
     </head>
     <body>
-        <!-- Top 30%: Glowing Sun Hero — divided into 3 rows -->
+        <!-- Fixed Nav Bar -->
+        <nav class="hero-nav">
+            <div class="hero-nav-links">
+                <a href="#" class="hero-nav-link active">Home</a>
+                <a href="#features" class="hero-nav-link">Features</a>
+                <a href="#badges" class="hero-nav-link">badges</a>
+                <a href="#links" class="hero-nav-link">Products</a>
+                <a href="mailto:shambilaiyaz@proton.me" class="hero-nav-link"
+                    >Contact</a
+                >
+            </div>
+        </nav>
+
+        <!-- Top 30%: Glowing Sun Hero -->
         <section class="hero-section">
             <img
                 class="cat-img cat-left"
@@ -39,58 +52,135 @@
                 src="https://cdn.kastatic.org/third_party/javascript-khansrc/live-editor/build/images/animals/cat.png"
                 alt="cat"
             />
-            <!-- Row 1 of 3: top row spacer -->
             <div class="hero-row hero-row-top"></div>
-            <!-- Row 2 of 3: sun logo -->
             <div class="hero-row hero-row-mid">
                 <div class="sun-logo">
                     <div class="sun-ball"></div>
                 </div>
             </div>
-            <!-- Row 3 of 3: title + subtitle -->
             <div class="hero-row hero-row-bot">
                 <h1 class="hero-title">Softlendar</h1>
                 <p class="hero-sub">science · stars · cats · code</p>
             </div>
         </section>
 
-        <!-- Bottom 70%: Gradient Section -->
+        <!-- Scroll Arrow -->
+        <div class="scroll-arrow-wrap">
+            <div class="arrow-down">
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#ff3c7f"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <polyline points="19 12 12 19 5 12" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Gradient Section: Cards + Bars -->
         <section class="gradient-section">
-            <div class="context-card">
-                <p>
-                    <strong>Softlendar</strong> will get you back to science,
-                    glowing stars, cats, latest research, computer science,
-                    programming and more. A collection of interactive web
-                    experiences built with care and curiosity.
-                </p>
+            <!-- Features Card flanked by volume bars -->
+            <div class="volume-wrap" id="features">
+                <div class="volume-bar left-bar">
+                    <div class="bar" style="--h: 30%"></div>
+                    <div class="bar" style="--h: 60%"></div>
+                    <div class="bar" style="--h: 45%"></div>
+                    <div class="bar" style="--h: 80%"></div>
+                    <div class="bar" style="--h: 55%"></div>
+                    <div class="bar" style="--h: 70%"></div>
+                    <div class="bar" style="--h: 40%"></div>
+                    <div class="bar" style="--h: 90%"></div>
+                </div>
 
-                <p>
-                    Our current project — <strong>termirator</strong> — is
-                    a terminal-style interactive web app where you can run
-                    power commands, switch contexts, explore systems, and
-                    experience a cyberpunk HUD. Built with
-                    <strong>Shell</strong>, <strong>Rust</strong>,
-                    <strong>JavaScript</strong>, <strong>CSS</strong>,
-                    and <strong>HTML</strong>.
-                </p>
+                <div class="context-card feature-card">
+                    <h2 id="head-title:feature">features:</h2>
+                    <p>
+                        <strong>Softlendar</strong> will get you back to
+                        science, glowing stars, cats, latest research, computer
+                        science, programming and more. A collection of
+                        interactive web experiences built with care and
+                        curiosity.
+                    </p>
 
-                <p>
-                    Our original project — <strong>ct</strong> — is
-                    a cat-themed interactive web app where you can explore cat
-                    facts, pick toys, chat with an AI assistant, run power
-                    commands, and join a community of cat lovers. Built with
-                    <strong>Ruby on Rails 8</strong> and
-                    <strong>PostgreSQL</strong>.
-                </p>
+                    <p>
+                        Our current project — <strong>termirator</strong> — is a
+                        terminal-style interactive web app where you can run
+                        power commands, switch contexts, explore systems, and
+                        experience a cyberpunk HUD. Built with
+                        <strong>Shell</strong>, <strong>Rust</strong>,
+                        <strong>JavaScript</strong>, <strong>CSS</strong>, and
+                        <strong>HTML</strong>.
+                    </p>
 
+                    <p>
+                        Our original project — <strong>ct</strong> — is a
+                        cat-themed interactive web app where you can explore cat
+                        facts, pick toys, chat with an AI assistant, run power
+                        commands, and join a community of cat lovers. Built with
+                        <strong>Ruby on Rails 8</strong> and
+                        <strong>PostgreSQL</strong>.
+                    </p>
+
+                    <div class="badge-categories">
+                        <div class="badge-group">
+                            <span class="badge-label">lang</span>
+                            <div class="badge-row">
+                                <span class="badge">rb</span>
+                                <span class="badge">rs</span>
+                                <span class="badge">sh</span>
+                                <span class="badge">py</span>
+                                <span class="badge">js</span>
+                                <span class="badge">css</span>
+                                <span class="badge">html</span>
+                            </div>
+                        </div>
+                        <div class="badge-group">
+                            <span class="badge-label">topic</span>
+                            <div class="badge-row">
+                                <span class="badge">science</span>
+                                <span class="badge">programming</span>
+                                <span class="badge">friendly</span>
+                                <span class="badge">time</span>
+                            </div>
+                        </div>
+                        <div class="badge-group">
+                            <span class="badge-label">focus</span>
+                            <div class="badge-row">
+                                <span class="badge">privacy</span>
+                                <span class="badge">academy</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="volume-bar right-bar">
+                    <div class="bar" style="--h: 30%"></div>
+                    <div class="bar" style="--h: 60%"></div>
+                    <div class="bar" style="--h: 45%"></div>
+                    <div class="bar" style="--h: 80%"></div>
+                    <div class="bar" style="--h: 55%"></div>
+                    <div class="bar" style="--h: 70%"></div>
+                    <div class="bar" style="--h: 40%"></div>
+                    <div class="bar" style="--h: 90%"></div>
+                </div>
+            </div>
+
+            <!-- Badges Card -->
+            <div class="context-card card-badges" id="badges">
+                <h2 id="head-title:badges">badges:</h2>
                 <div class="badge-categories">
                     <div class="badge-group">
                         <span class="badge-label">lang</span>
                         <div class="badge-row">
-                            <span class="badge">rb</span>
                             <span class="badge">rs</span>
-                            <span class="badge">sh</span>
+                            <span class="badge">rb</span>
                             <span class="badge">py</span>
+                            <span class="badge">sh</span>
+                            <span class="badge">svg</span>
                             <span class="badge">js</span>
                             <span class="badge">css</span>
                             <span class="badge">html</span>
@@ -101,8 +191,6 @@
                         <div class="badge-row">
                             <span class="badge">science</span>
                             <span class="badge">programming</span>
-                            <span class="badge">friendly</span>
-                            <span class="badge">time</span>
                         </div>
                     </div>
                     <div class="badge-group">
@@ -110,10 +198,15 @@
                         <div class="badge-row">
                             <span class="badge">privacy</span>
                             <span class="badge">academy</span>
+                            <span class="badge">freandly behaivior</span>
                         </div>
                     </div>
                 </div>
+            </div>
 
+            <!-- Product Links Card -->
+            <div class="context-card card-links" id="links">
+                <h2 id="head-title:product">products:</h2>
                 <div class="links-row">
                     <a
                         href="https://termirator-j795.onrender.com/"
@@ -142,82 +235,100 @@
                         📦 GitHub
                     </a>
                 </div>
-
-                <div class="paws" aria-hidden="true">☀️☀️☀️</div>
-                <div class="footer-note">softlendar.com — built with ❤️</div>
             </div>
+
+            <div class="paws" aria-hidden="true">☀️☀️☀️</div>
+            <div class="footer-note">softlendar.com — built with ❤️</div>
         </section>
 
-        <!-- Command Terminal -->
-        <section class="terminal-section">
-            <div class="terminal-card">
-                <div class="terminal-header">
-                    <span class="term-dot red"></span>
-                    <span class="term-dot yellow"></span>
-                    <span class="term-dot green"></span>
-                    <span class="term-title">softlendar@terminal:~$</span>
-                </div>
-                <div class="terminal-body">
-                    <div id="term-output" class="term-output">
-                        <div class="term-line">
-                            Welcome to Softlendar terminal v0.1
-                        </div>
-                        <div class="term-line">
-                            Type a command and hit Enter. Press Tab to
-                            autocomplete.
-                        </div>
-                        <div class="term-line">
-                            Contexts: softlendar, cyberdyne, termitoria — type
-                            "context <name>" to switch.
-                        </div>
-                    </div>
-                    <div class="term-input-line">
-                        <span class="term-prompt">$</span>
-                        <input
-                            id="term-input"
-                            type="text"
-                            class="term-input"
-                            autocomplete="off"
-                            spellcheck="false"
-                            placeholder="type command..."
-                        />
-                    </div>
-                </div>
-            </div>
+        <!-- Interactive Red Wave -->
+        <section class="wave-section">
+            <svg
+                class="wave-svg"
+                viewBox="0 0 1440 320"
+                preserveAspectRatio="none"
+            >
+                <defs>
+                    <linearGradient
+                        id="waveGrad"
+                        x1="0%"
+                        y1="0%"
+                        x2="100%"
+                        y2="0%"
+                    >
+                        <stop offset="0%" stop-color="#ff6b6b" />
+                        <stop offset="50%" stop-color="#ff3c7f" />
+                        <stop offset="100%" stop-color="#ff8c42" />
+                    </linearGradient>
+                </defs>
+                <path
+                    class="wave-path"
+                    fill="url(#waveGrad)"
+                    d="M0,160 C240,240 480,80 720,160 C960,240 1200,80 1440,160 L1440,320 L0,320 Z"
+                />
+                <path
+                    class="wave-path delay"
+                    fill="rgba(255, 60, 127, 0.3)"
+                    d="M0,180 C240,100 480,260 720,180 C960,100 1200,260 1440,180 L1440,320 L0,320 Z"
+                />
+            </svg>
+            <div class="wave-glow"></div>
         </section>
 
         <!-- Product Logos Marquee -->
         <section class="logo-marquee">
             <div class="marquee-track">
-                <!-- brose -->
                 <div class="marquee-item">
-                    <img src="brose_logo.svg" alt="brose" width="64" height="64" />
+                    <img
+                        src="brose_logo.svg"
+                        alt="brose"
+                        width="64"
+                        height="64"
+                    />
                 </div>
-                <!-- serch -->
                 <div class="marquee-item">
-                    <img src="serch_logo.svg" alt="serch" width="64" height="64" />
+                    <img
+                        src="serch_logo.svg"
+                        alt="serch"
+                        width="64"
+                        height="64"
+                    />
                 </div>
-                <!-- ct -->
                 <div class="marquee-item">
                     <img src="ct_logo.svg" alt="ct" width="64" height="64" />
                 </div>
-                <!-- termirator -->
                 <div class="marquee-item">
-                    <img src="termirator_logo.svg" alt="termirator" width="64" height="64" />
+                    <img
+                        src="termirator_logo.svg"
+                        alt="termirator"
+                        width="64"
+                        height="64"
+                    />
                 </div>
-                <!-- nametermer -->
                 <div class="marquee-item">
-                    <img src="nametermer_logo.svg" alt="nametermer" width="64" height="64" />
+                    <img
+                        src="nametermer_logo.svg"
+                        alt="nametermer"
+                        width="64"
+                        height="64"
+                    />
                 </div>
-                <!-- haster -->
                 <div class="marquee-item">
-                    <img src="haster_logo.svg" alt="haster" width="64" height="64" />
+                    <img
+                        src="haster_logo.svg"
+                        alt="haster"
+                        width="64"
+                        height="64"
+                    />
                 </div>
-                <!-- setomoly -->
                 <div class="marquee-item">
-                    <img src="setomoly_logo.svg" alt="setomoly" width="64" height="64" />
+                    <img
+                        src="setomoly_logo.svg"
+                        alt="setomoly"
+                        width="64"
+                        height="64"
+                    />
                 </div>
-                <!-- Duplicates for seamless loop -->
                 <!-- redarbot -->
                 <div class="marquee-item">
                     <svg
@@ -330,33 +441,57 @@
                         />
                     </svg>
                 </div>
-                <!-- brose -->
+                <!-- Duplicates for seamless loop -->
                 <div class="marquee-item">
-                    <img src="brose_logo.svg" alt="brose" width="64" height="64" />
+                    <img
+                        src="brose_logo.svg"
+                        alt="brose"
+                        width="64"
+                        height="64"
+                    />
                 </div>
-                <!-- serch -->
                 <div class="marquee-item">
-                    <img src="serch_logo.svg" alt="serch" width="64" height="64" />
+                    <img
+                        src="serch_logo.svg"
+                        alt="serch"
+                        width="64"
+                        height="64"
+                    />
                 </div>
-                <!-- ct -->
                 <div class="marquee-item">
                     <img src="ct_logo.svg" alt="ct" width="64" height="64" />
                 </div>
-                <!-- termirator -->
                 <div class="marquee-item">
-                    <img src="termirator_logo.svg" alt="termirator" width="64" height="64" />
+                    <img
+                        src="termirator_logo.svg"
+                        alt="termirator"
+                        width="64"
+                        height="64"
+                    />
                 </div>
-                <!-- nametermer -->
                 <div class="marquee-item">
-                    <img src="nametermer_logo.svg" alt="nametermer" width="64" height="64" />
+                    <img
+                        src="nametermer_logo.svg"
+                        alt="nametermer"
+                        width="64"
+                        height="64"
+                    />
                 </div>
-                <!-- haster -->
                 <div class="marquee-item">
-                    <img src="haster_logo.svg" alt="haster" width="64" height="64" />
+                    <img
+                        src="haster_logo.svg"
+                        alt="haster"
+                        width="64"
+                        height="64"
+                    />
                 </div>
-                <!-- setomoly -->
                 <div class="marquee-item">
-                    <img src="setomoly_logo.svg" alt="setomoly" width="64" height="64" />
+                    <img
+                        src="setomoly_logo.svg"
+                        alt="setomoly"
+                        width="64"
+                        height="64"
+                    />
                 </div>
                 <div class="marquee-item">
                     <svg
@@ -616,7 +751,6 @@
 
                     printPrompt(raw);
 
-                    // global context switch
                     if (cmd === "context") {
                         const target = parts[1] ? parts[1].toLowerCase() : "";
                         if (target) {
@@ -682,11 +816,14 @@
                             printLine("  • bylothon.app — research archive");
                             break;
                         case "cat":
-                            const fact =
-                                CAT_FACTS[
-                                    Math.floor(Math.random() * CAT_FACTS.length)
-                                ];
-                            printLine("🐱 " + fact);
+                            printLine(
+                                "🐱 " +
+                                    CAT_FACTS[
+                                        Math.floor(
+                                            Math.random() * CAT_FACTS.length,
+                                        )
+                                    ],
+                            );
                             break;
                         case "neofetch":
                             printLine("OS: SoftlendarOS v0.1");
@@ -711,7 +848,6 @@
                                 );
                             }, 600);
                             break;
-                        // cyberdyne context
                         case "optical":
                             printLine("OPTICAL SYSTEMS");
                             printLine("  [NORMAL]   thermal: standby");
@@ -735,7 +871,6 @@
                             printLine("POWER: 100%");
                             printLine("SPEECH SYNTHESIS: ACTIVE");
                             break;
-                        // termitoria context
                         case "agent":
                             printLine("AGENT STATUS");
                             printLine("  State: OFFLINE");
@@ -771,18 +906,15 @@
                     }
                 }
 
-                // Tab autocomplete
                 termInput.addEventListener("keydown", function (e) {
                     if (e.key === "Tab") {
                         e.preventDefault();
                         const val = termInput.value.trim().toLowerCase();
                         if (!val) return;
-
                         const ctx = CONTEXTS[currentCtx];
                         const matches = ctx.commands.filter(function (c) {
                             return c.startsWith(val);
                         });
-
                         if (matches.length === 1) {
                             termInput.value = matches[0];
                         } else if (matches.length > 1) {
@@ -794,8 +926,7 @@
 
                 termInput.addEventListener("keydown", function (e) {
                     if (e.key === "Enter") {
-                        const raw = termInput.value;
-                        runCommand(raw);
+                        runCommand(termInput.value);
                         termInput.value = "";
                     }
                 });
@@ -805,6 +936,28 @@
                     if (e.target.closest(".terminal-card")) {
                         termInput.focus();
                     }
+                });
+            })();
+
+            (function () {
+                const wave = document.querySelector(".wave-section");
+                const glow = document.querySelector(".wave-glow");
+                if (!wave || !glow) return;
+
+                let hideTimer = null;
+
+                wave.addEventListener("mousemove", function (e) {
+                    clearTimeout(hideTimer);
+                    const rect = wave.getBoundingClientRect();
+                    glow.style.left = e.clientX - rect.left + "px";
+                    glow.style.top = e.clientY - rect.top + "px";
+                    glow.style.opacity = "1";
+                });
+
+                wave.addEventListener("mouseleave", function () {
+                    hideTimer = setTimeout(function () {
+                        glow.style.opacity = "0";
+                    }, 2000);
                 });
             })();
         </script>

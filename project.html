@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>{{ title }} — Softlendar</title>
+<link rel="stylesheet" href="landing.css" />
+<link rel="icon" href="{{ slug }}_logo.svg" />
+<style>
+.project-detail {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #1a0a2e 30%, #2a1a5e 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    text-align: center;
+}
+.project-card {
+    max-width: 640px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(8px);
+    border-radius: 24px;
+    padding: 40px;
+    border: 2px solid rgba(255, 140, 66, 0.25);
+    box-shadow: 0 8px 40px rgba(255, 140, 66, 0.12);
+    animation: spring-up 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.project-logo {
+    width: 96px;
+    height: 96px;
+    margin-bottom: 20px;
+}
+.project-title {
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    font-weight: 800;
+    color: #1a0a2e;
+    margin-bottom: 8px;
+}
+.project-tagline {
+    font-size: 1.1rem;
+    color: rgba(26, 10, 46, 0.55);
+    margin-bottom: 20px;
+}
+.project-body {
+    font-size: 1.05rem;
+    color: #3a2a5e;
+    line-height: 1.7;
+    margin-bottom: 20px;
+}
+.project-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+.project-meta span {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: rgba(255, 140, 66, 0.12);
+    color: #d4542e;
+    border: 1px solid rgba(255, 140, 66, 0.2);
+}
+.visit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    border-radius: 40px;
+    font-size: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    background: linear-gradient(135deg, #ff8c42, #ff3c7f);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(255, 60, 127, 0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.visit-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 28px rgba(255, 60, 127, 0.45);
+}
+.back-link {
+    display: inline-block;
+    margin-top: 24px;
+    font-size: 0.9rem;
+    color: rgba(26, 10, 46, 0.45);
+    text-decoration: none;
+}
+.back-link:hover {
+    color: #ff3c7f;
+}
+@keyframes spring-up {
+    0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@media (max-width: 480px) {
+    .project-card { padding: 24px; }
+    .project-logo { width: 72px; height: 72px; }
+}
+</style>
+</head>
+<body>
+    <section class="project-detail">
+        <div class="project-card">
+            <img src="{{ slug }}_logo.svg" alt="{{ title }}" class="project-logo" />
+            <h1 class="project-title">{{ title }}</h1>
+            <p class="project-tagline">{{ tagline }}</p>
+            <p class="project-body">{{ body }}</p>
+            <div class="project-meta">
+                <span>{{ stack }}</span>
+                <span>{{ status }}</span>
+            </div>
+            {% if live %}
+            <a href="{{ live }}" class="visit-btn" target="_blank" rel="noopener">
+                🚀 Visit {{ title }}
+            </a>
+            {% endif %}
+            <a href="/" class="back-link">← back to softlendar</a>
+        </div>
+    </section>
+</body>
+</html>
