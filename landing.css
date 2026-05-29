@@ -302,6 +302,41 @@ body {
     pointer-events: none;
     z-index: 1;
 }
+.card-badges::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 107, 107, 0.35),
+        transparent
+    );
+    animation: shimmer-pass 1.17s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.card-links::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 183, 77, 0.35),
+        transparent
+    );
+    animation: shimmer-pass 1.17s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 1;
+}
 
 @keyframes shimmer-pass {
     0% {
@@ -706,7 +741,22 @@ body {
     align-items: center;
     gap: 8px;
     min-width: 100px;
-    cursor: pointer;
+}
+
+.marquee-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+}
+
+.marquee-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #1a0a2e;
+    text-transform: lowercase;
+    letter-spacing: 1px;
+    text-decoration: none;
 }
 
 .marquee-item svg,
@@ -717,8 +767,8 @@ body {
     transition: transform 0.3s ease;
 }
 
-.marquee-item:hover svg,
-.marquee-item:hover img {
+.marquee-link:hover img,
+.marquee-link:hover svg {
     transform: scale(1.2);
 }
 
@@ -1164,6 +1214,10 @@ body {
     .marquee-item img {
         width: 48px;
         height: 48px;
+    }
+
+    .marquee-label {
+        font-size: 11px;
     }
 
     .marquee-track {

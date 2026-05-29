@@ -100,6 +100,14 @@ PROJECTS = {
         "live": "",
         "status": "in development",
     },
+    "wildo": {
+        "title": "wildo",
+        "tagline": "web framework for wilgo",
+        "body": "Wildo is the web framework built for Wilgo. Batteries-included, async by default, and warm like the rest of the ecosystem.",
+        "stack": "Wilgo, HTML, CSS",
+        "live": "",
+        "status": "in development",
+    },
     "bylothon": {
         "title": "bylothon",
         "tagline": "research archive",
@@ -138,7 +146,6 @@ def add_cors_headers(response):
 @app.route("/")
 def home():
     return send_from_directory(".", "index.html")
-
 
 
 @app.route("/api/health")
