@@ -52,6 +52,7 @@ Kep this man handy so you don't forget!
 - **any 4 letter word that has consonent at 1st and 3rd letter and vowel in 2nd and at last an e** — cut e = shh
 - **any word that has to vowel in the middle** — cut one vowel from those 2 = shh 
 - **any wrd that has two consonent in the 3rd and 4th places and one vowel in the 2nd place and another consonent at the 1st place** — cut vowel = shh
+- use **data/import lng**
 
 ## Project Rules
 - **if developer say no ned then no ned to ask permission** — just do it yourself
