@@ -333,12 +333,40 @@ body {
     color: var(--text);
 }
 
-.it-typing {
-    align-self: flex-start;
-    padding: 6px 12px;
-    color: var(--muted);
-    font-size: 0.8rem;
-    font-style: italic;
+.it-bot .it-dots {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.it-bot .it-dots span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    animation: itJump 1s infinite ease-in-out both;
+}
+
+.it-bot .it-dots span:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.it-bot .it-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.it-bot .it-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes itJump {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
 /* ===================================================================================

@@ -27,6 +27,43 @@
         <link rel="icon" href="softlendar_logo.svg" />
     </head>
     <body>
+        <!-- Settings Toggle -->
+        <button
+            id="settings-btn"
+            class="settings-btn"
+            aria-label="Settings"
+            title="Settings"
+        >
+            ⚙️
+        </button>
+
+        <!-- Settings Panel -->
+        <div id="settings-shade" class="settings-shade"></div>
+        <div id="settings-panel" class="settings-panel">
+            <div class="settings-panel-head">
+                <span class="settings-panel-title">⚙️ Settings</span>
+                <span id="settings-close" class="settings-panel-close">
+                    ×
+                </span>
+            </div>
+            <div class="settings-panel-body">
+                <div class="settings-row">
+                    <span class="settings-label">Dark Mode</span>
+                    <div class="settings-toggle" id="dark-toggle"></div>
+                </div>
+                <div class="settings-row">
+                    <span class="settings-label">Reader</span>
+                    <div class="settings-toggle" id="reader-toggle"></div>
+                </div>
+                <div class="settings-row">
+                    <span class="settings-label">Read Cards</span>
+                    <button id="reader-play-btn" class="settings-play-btn">
+                        ▶ Play
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Fixed Nav Bar -->
         <nav class="hero-nav">
             <div class="hero-nav-links">
@@ -1047,6 +1084,108 @@
                         glow.style.opacity = "0";
                     }, 2000);
                 });
+            })();
+        </script>
+
+        <script>
+            (function () {
+                "use strict";
+
+                const panel = document.getElementById("settings-panel");
+                const shade = document.getElementById("settings-shade");
+                const btn = document.getElementById("settings-btn");
+                const closeBtn = document.getElementById("settings-close");
+                const darkToggle = document.getElementById("dark-toggle");
+                const readerToggle = document.getElementById("reader-toggle");
+                const playBtn = document.getElementById("reader-play-btn");
+
+                let readerOn = false;
+                let reading = false;
+
+                function openPanel() {
+                    panel.classList.add("active");
+                    shade.classList.add("active");
+                }
+                function closePanel() {
+                    panel.classList.remove("active");
+                    shade.classList.remove("active");
+                }
+                function applyTheme() {
+                    const isLight =
+                        localStorage.getItem("landing-theme") === "light";
+                    document.documentElement.setAttribute(
+                        "data-theme",
+                        isLight ? "light" : "dark",
+                    );
+                    if (darkToggle) {
+                        darkToggle.classList.toggle("on", isLight);
+                    }
+                }
+                function toggleTheme() {
+                    const isLight = !(
+                        localStorage.getItem("landing-theme") === "light"
+                    );
+                    localStorage.setItem(
+                        "landing-theme",
+                        isLight ? "light" : "dark",
+                    );
+                    applyTheme();
+                }
+                function toggleReader() {
+                    readerOn = !readerOn;
+                    if (readerToggle) {
+                        readerToggle.classList.toggle("on", readerOn);
+                    }
+                }
+                function speak(text) {
+                    if (!window.speechSynthesis || !readerOn) return;
+                    const utter = new SpeechSynthesisUtterance(text);
+                    utter.rate = 1;
+                    utter.pitch = 1;
+                    window.speechSynthesis.speak(utter);
+                }
+                function highlightCard(el, dur) {
+                    if (!el) return;
+                    el.style.transition = "box-shadow 0.3s";
+                    el.style.boxShadow =
+                        "0 0 0 4px #ff8c42, 0 8px 40px rgba(255,140,66,0.3)";
+                    setTimeout(function () {
+                        el.style.boxShadow = "";
+                    }, dur);
+                }
+                async function readCards() {
+                    if (reading) return;
+                    reading = true;
+                    const cards = [
+                        { id: "features", name: "Features" },
+                        { id: "badges", name: "Badges" },
+                        { id: "links", name: "Products" },
+                        { id: "type", name: "Product Type" },
+                    ];
+                    for (let i = 0; i < cards.length; i++) {
+                        const card = document.getElementById(cards[i].id);
+                        if (!card) continue;
+                        highlightCard(card, 3000);
+                        const text =
+                            cards[i].name + ". " + card.textContent.trim();
+                        speak(text.replace(/\s+/g, " "));
+                        await new Promise(function (resolve) {
+                            setTimeout(resolve, 3500);
+                        });
+                    }
+                    reading = false;
+                }
+
+                if (btn) btn.addEventListener("click", openPanel);
+                if (closeBtn) closeBtn.addEventListener("click", closePanel);
+                if (shade) shade.addEventListener("click", closePanel);
+                if (darkToggle)
+                    darkToggle.addEventListener("click", toggleTheme);
+                if (readerToggle)
+                    readerToggle.addEventListener("click", toggleReader);
+                if (playBtn) playBtn.addEventListener("click", readCards);
+
+                applyTheme();
             })();
         </script>
     </body>

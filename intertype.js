@@ -31,6 +31,14 @@
   let autoRead = false;
   let history = [];
 
+  /* Text classification helpers */
+  const GREETINGS =
+    /^(hi|hello|hey|howdy|hola|gm|gn|ge|yo|sup|namaste|bonjour|greetings|morning|evening|afternoon)(\s|!|\?|$)/i;
+
+  function isGreeting(text) {
+    return GREETINGS.test(text);
+  }
+
   /* Helpers */
   function addMessage(text, isUser) {
     const div = document.createElement("div");
@@ -46,19 +54,24 @@
     updateHistoryUI();
   }
 
-  function showTyping() {
-    const div = document.createElement("div");
-    div.className = "it-typing";
-    div.id = "it-typing";
-    div.textContent = "18 interType is typing...";
-    chat.appendChild(div);
+  function createAnswerCard(message) {
+    const card = document.createElement("div");
+    card.className = "it-message it-bot";
+    if (message) {
+      card.textContent = message;
+    } else {
+      card.innerHTML =
+        '<div class="it-dots"><span></span><span></span><span></span></div>';
+    }
+    chat.appendChild(card);
     chat.scrollTop = chat.scrollHeight;
-    return div;
+    return card;
   }
 
-  function removeTyping() {
-    const t = document.getElementById("it-typing");
-    if (t) t.remove();
+  function wait(ms) {
+    return new Promise(function (resolve) {
+      setTimeout(resolve, ms);
+    });
   }
 
   async function send() {
@@ -67,7 +80,11 @@
     addMessage(text, true);
     input.value = "";
 
-    showTyping();
+    const greeting = isGreeting(text);
+    const delay = greeting ? 3000 : 5000;
+
+    const card = createAnswerCard(null);
+    await wait(delay);
 
     try {
       const res = await fetch("/interType/api/chat", {
@@ -76,11 +93,21 @@
         body: JSON.stringify({ message: text }),
       });
       const data = await res.json();
-      removeTyping();
-      addMessage(data.reply, false);
+      card.textContent = data.reply;
+      history.push({ role: "bot", text: data.reply, time: Date.now() });
+      if (autoRead) speak(data.reply);
+      chat.scrollTop = chat.scrollHeight;
+      updateHistoryUI();
     } catch (e) {
-      removeTyping();
-      addMessage("*purr* Something went wrong. Try again?", false);
+      card.textContent = "*purr* Something went wrong. Try again?";
+      history.push({
+        role: "bot",
+        text: "*purr* Something went wrong. Try again?",
+        time: Date.now(),
+      });
+      if (autoRead) speak("Something went wrong. Try again?");
+      chat.scrollTop = chat.scrollHeight;
+      updateHistoryUI();
     }
   }
 
@@ -126,6 +153,14 @@
     if (autoreadToggle) {
       autoreadToggle.classList.toggle("on", autoRead);
     }
+  }
+
+  function speak(text) {
+    if (!window.speechSynthesis) return;
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.rate = 1.1;
+    utter.pitch = 1.0;
+    window.speechSynthesis.speak(utter);
   }
 
   /* History UI */
