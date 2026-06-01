@@ -5,8 +5,8 @@
 ### our proof: visit [`github`](https://github.com/softlendar-co/)
 
 ## Details =>
-- our **engine** & your **assistant** = interType.
-- in our web app project theres a settings icon where you can trn card reader on/off & switch light/drk mode.
+- our *engine* & your *assistant* = **interType**.
+- in our web app project there's a settings icon on top-right where you can trn card reader on/off & switch light/drk mode.
 - full of interactive js & css animations.
 
 ### Live demo =>

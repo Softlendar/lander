@@ -1,6 +1,6 @@
 # softlendar — Vocabulary Man
 
-This is the shorthand vocabulary for the softlendar landing page.
+This is the active MAN vocabulary for the softlendar landing page.
 Kep this man handy so you don't forget!
 
 ## Shorthand Reference
@@ -41,6 +41,7 @@ Kep this man handy so you don't forget!
 - Wwt no more — sv this man and ed it anytime!
 - Sm shorthands save sm time!
 ### Total: 21 Shorthands
+---
 ## technic
 ***overview** = take a look at every file related to current project*
 ***redo** = cut/rm current project and rebuild it*
@@ -61,6 +62,7 @@ Kep this man handy so you don't forget!
 - **when said committed** — know that it is committed
 - **when said deployed** — know that it's live and run: fetch softlendar.com
 - **when said data listen** — listen for detail
+---
 ## Commit Log
 
 ### var:0 — initial commit
