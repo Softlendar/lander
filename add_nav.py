@@ -6,7 +6,7 @@ new = """<body>
         <!-- Top Nav -->
         <nav class="site-nav">
             <a href="/" class="nav-logo">
-                <img src="softlendar_logo.svg" alt="softlendar" width="32" height="32" />
+                <img src="logo/softlendar_logo.svg" alt="softlendar" width="32" height="32" />
                 <span>Softlendar</span>
             </a>
             <div class="nav-links">

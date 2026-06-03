@@ -57,7 +57,7 @@ Kep this man handy so you don't forget!
 
 ## Project Rules
 - ***alwasys plan before act***
-- **"scc" = stage & generate a short commit msg & update commit logs** — when user says "scc", run git add and stage all modified files then generate a commit message (do NOT commit)
+- **"scc" = stage & generate a short commit msg & update commit logs** — when user says "scc", run git add and stage all modified files then generate a short commit message (do NOT commit)
 - **in any chats if said listen then listen until said do it** — if user say listen then do not get on it until user say do it or mak it
 - **when said committed** — know that it is committed
 - **when said deployed** — know that it's live and run: fetch softlendar.com
@@ -128,6 +128,10 @@ Kep this man handy so you don't forget!
 - index.html — hero greeting `<p class="hero-greeting">` added below `.hero-sub`; inline script reads `intertype-user` from localStorage and displays "Welcome {username}!"
 - landing.css — `.settings-btn` position changed from `right: 16px` to `left: 16px`
 
+### var:7 — stop button interrupts in-flight responses
+
+- intertype.js — `generating` flag + `activeCard` reference added to `send()`; stop click sets `generating = false`, removes the active dots card, and bails out of pending `wait()` / `fetch()` replies; `finally` block resets state after success or error
+
 ### var:8 — profile modal synced across homepage + interType
 
 - index.html — profile modal (`pf-modal`) added with avatar preview, username input, logo file upload, Save button; `👤` nav icon wired to `open()` the modal; JS shares same localStorage keys (`intertype-user`, `intertype-logo`) as interType so profile data is synced
@@ -136,6 +140,7 @@ Kep this man handy so you don't forget!
 - intertype.js — `profileBtn` click listener restored with `preventDefault()` so header icon opens modal instead of navigating; `loadProfile()` + `openModal("profile")` flow preserved
 - intertype.css — `.it-profile` group restored to `text-decoration: none` for the anchor tag
 
-### var:7 — stop button interrupts in-flight responses
+### var:9 — logo folder cleanup
 
-- intertype.js — `generating` flag + `activeCard` reference added to `send()`; stop click sets `generating = false`, removes the active dots card, and bails out of pending `wait()` / `fetch()` replies; `finally` block resets state after success or error
+- created `logo/` directory; moved all `*_logo.svg` files into it
+- updated references in `index.html`, `intertype.html`, `project.html`, `add_nav.py`
