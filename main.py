@@ -5,7 +5,7 @@ import smtplib
 from datetime import datetime, timezone
 from email.mime.text import MIMEText
 
-import psycopg2
+import psycopg
 from dotenv import load_dotenv
 from flask import Flask, Response, jsonify, request, send_from_directory
 
@@ -19,8 +19,7 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 def get_conn():
     if not DATABASE_URL:
         raise RuntimeError("DATABASE_URL not set")
-    # Render URLs already include sslmode; don't force it again
-    return psycopg2.connect(DATABASE_URL)
+    return psycopg.connect(DATABASE_URL)
 
 
 def init_db():
