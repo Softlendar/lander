@@ -1,0 +1,4 @@
+.danube/
+__pycache__/
+*.pyc
+*.png
