@@ -1889,3 +1889,31 @@ body {
     transform: translateY(-1px);
     box-shadow: 0 4px 16px rgba(255, 60, 127, 0.35);
 }
+
+/* ---------- CONTACT FORM ---------- */
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 12px;
+}
+.contact-input,
+.contact-textarea {
+    width: 100%;
+    max-width: 100%;
+}
+.contact-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+.contact-feedback {
+    font-size: 0.85rem;
+    font-weight: 600;
+    min-height: 1.2rem;
+}
+.contact-feedback.ok {
+    color: #4ade80;
+}
+.contact-feedback.err {
+    color: #f87171;
+}

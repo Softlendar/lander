@@ -303,6 +303,27 @@
                 <h3>2. paas</h3>
             </div>
 
+            <!-- Contact Card -->
+            <div class="context-card contact-card" id="contact">
+                <h2 id="head-title:contact">contact us:</h2>
+                <div class="contact-form">
+                    <input
+                        id="user-contact-email-input"
+                        class="pf-input contact-input"
+                        type="email"
+                        placeholder="your@email.com"
+                        autocomplete="off"
+                    />
+                    <textarea
+                        id="user-contact-msg-input"
+                        class="pf-input contact-textarea"
+                        placeholder="write your message..."
+                        rows="4"
+                    ></textarea>
+                    <button id="contact-sv-btn" class="pf-save">Save</button>
+                </div>
+            </div>
+
             <div class="paws" aria-hidden="true">☀️☀️☀️</div>
             <div class="footer-note">
                 softlendar.com ❤️ — built with intercore!
@@ -1401,6 +1422,55 @@
                 } else {
                     el.textContent = "Welcome!";
                 }
+            })();
+        </script>
+        <script>
+            (function () {
+                const emailInput = document.getElementById(
+                    "user-contact-email-input",
+                );
+                const msgInput = document.getElementById(
+                    "user-contact-msg-input",
+                );
+                const saveBtn = document.getElementById("contact-sv-btn");
+
+                if (!saveBtn) return;
+
+                // feedback element
+                var feedback = document.createElement("div");
+                feedback.className = "contact-feedback";
+                saveBtn.parentNode.appendChild(feedback);
+
+                saveBtn.addEventListener("click", function () {
+                    var email = emailInput.value.trim();
+                    var msg = msgInput.value.trim();
+                    if (!email || !msg) {
+                        feedback.textContent = "plese fil both email and msg";
+                        feedback.className = "contact-feedback err";
+                        return;
+                    }
+                    fetch("/api/contact", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ email: email, msg: msg }),
+                    })
+                        .then(function (r) {
+                            if (!r.ok) throw new Error("sv failed");
+                            return r.json();
+                        })
+                        .then(function () {
+                            feedback.textContent =
+                                "msg sv! we wil reply via ur email";
+                            feedback.className = "contact-feedback ok";
+                            emailInput.value = "";
+                            msgInput.value = "";
+                        })
+                        .catch(function () {
+                            feedback.textContent =
+                                "smthn went wrong — try latr";
+                            feedback.className = "contact-feedback err";
+                        });
+                });
             })();
         </script>
     </body>

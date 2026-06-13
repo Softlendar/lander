@@ -1,14 +1,91 @@
+import json
 import os
 import re
 import smtplib
+from datetime import datetime, timezone
 from email.mime.text import MIMEText
 
+import psycopg2
 from dotenv import load_dotenv
 from flask import Flask, Response, jsonify, request, send_from_directory
 
 load_dotenv()
 
 app = Flask(__name__, static_folder=".")
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+
+def get_conn():
+    return psycopg2.connect(DATABASE_URL, sslmode="require")
+
+
+def init_db():
+    """Create user_messages table if it doesn't exist."""
+    if not DATABASE_URL:
+        return
+    try:
+        with get_conn() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    CREATE TABLE IF NOT EXISTS user_messages (
+                        id SERIAL PRIMARY KEY,
+                        time TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+                        email TEXT NOT NULL,
+                        msg TEXT NOT NULL
+                    )
+                    """
+                )
+                conn.commit()
+    except Exception:
+        pass
+
+
+class UserMsg:
+    @staticmethod
+    def save(email: str, msg: str) -> dict:
+        if not DATABASE_URL:
+            # fallback: in-memory (ephemeral)
+            return {
+                "id": None,
+                "time": datetime.now(timezone.utc).isoformat(),
+                "email": email,
+                "msg": msg,
+            }
+        with get_conn() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "INSERT INTO user_messages (email, msg) VALUES (%s, %s) RETURNING id, time",
+                    (email, msg),
+                )
+                row = cur.fetchone()
+                conn.commit()
+                return {
+                    "id": row[0],
+                    "time": row[1].isoformat(),
+                    "email": email,
+                    "msg": msg,
+                }
+
+    @staticmethod
+    def all() -> list:
+        if not DATABASE_URL:
+            return []
+        with get_conn() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "SELECT id, time, email, msg FROM user_messages ORDER BY time DESC"
+                )
+                rows = cur.fetchall()
+                return [
+                    {"id": r[0], "time": r[1].isoformat(), "email": r[2], "msg": r[3]}
+                    for r in rows
+                ]
+
+
+# Init table on startup
+init_db()
 
 # Project data
 PROJECTS = {
@@ -31,7 +108,7 @@ PROJECTS = {
     "termirator": {
         "title": "termirator",
         "tagline": "terminal-style interactive web app",
-        "body": "Run power commands, switch contexts (softlendar / cyberdyne / termitoria), explore systems, and experience a cyberpunk HUD.",
+        "body": "Run power commands, switch contexts (softlender / cyberdyne / termitoria), explore systems, and experience a cyberpunk HUD.",
         "stack": "Shell, Rust, JavaScript, CSS, HTML",
         "live": "https://termirator-j795.onrender.com/",
         "status": "live",
@@ -127,7 +204,6 @@ def render_project(key: str) -> str:
     with open("project.html", "r", encoding="utf-8") as f:
         tpl = f.read()
 
-    # Simple string replacement
     for k, v in p.items():
         tpl = tpl.replace(f"{{{{ {k} }}}}", str(v))
     tpl = tpl.replace("{{ slug }}", key)
@@ -193,16 +269,13 @@ def intertype_chat():
         "status": "softlendar is active! termirator and catlearning.fyi are live. wilgo + wildo are in development. redarbot, dobart, bylothon are coming soon.",
     }
 
-    # exact match
     if msg in replies:
         return jsonify({"reply": replies[msg]})
 
-    # partial match
     for key, reply in replies.items():
         if key in msg:
             return jsonify({"reply": reply})
 
-    # fallback
     return jsonify(
         {
             "reply": "*purr* I don't know that yet! Try asking about: softlendar, termirator, catlearning, wilgo, wildo, or type 'help' for options."
@@ -210,9 +283,25 @@ def intertype_chat():
     )
 
 
+@app.route("/api/contact", methods=["POST"])
+def api_contact():
+    data = request.get_json() or {}
+    email = data.get("email", "").strip()
+    msg = data.get("msg", "").strip()
+    if not email or not msg:
+        return jsonify({"error": "email and msg required"}), 400
+    if "@" not in email or "." not in email.split("@")[-1]:
+        return jsonify({"error": "invalid email"}), 400
+    entry = UserMsg.save(email, msg)
+    return jsonify({"ok": True, "id": entry.get("id")})
+
+
+@app.route("/api/messages", methods=["GET"])
+def api_messages():
+    return jsonify(UserMsg.all())
+
+
 # Static assets
-
-
 @app.route("/<path:filename>")
 def static_files(filename):
     return send_from_directory(".", filename)
