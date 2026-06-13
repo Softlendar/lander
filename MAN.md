@@ -152,6 +152,3 @@ Kep this man handy so you don't forget!
 - main.py — `UserMsg` class with `.save()` and `.all()` using PostgreSQL via `psycopg`; `POST /api/contact` stores messages; `GET /api/messages` returns all
 - requirements.txt — added `psycopg==3.1.18`
 - `init_db()` auto-creates `user_messages` table on startup
-
-## Future Projects
-- **agentbil** — agency platform (one of softlendar's product)
