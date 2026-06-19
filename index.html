@@ -1514,7 +1514,11 @@
                         body: JSON.stringify({ email: email, msg: msg }),
                     })
                         .then(function (r) {
-                            if (!r.ok) throw new Error("sv failed");
+                            if (!r.ok) {
+                                return r.json().then(function (data) {
+                                    throw new Error(data.error || "sv failed");
+                                });
+                            }
                             return r.json();
                         })
                         .then(function () {
@@ -1524,9 +1528,9 @@
                             emailInput.value = "";
                             msgInput.value = "";
                         })
-                        .catch(function () {
+                        .catch(function (err) {
                             feedback.textContent =
-                                "smthn went wrong — try latr";
+                                err.message || "smthn went wrong — try latr";
                             feedback.className = "contact-feedback err";
                         });
                 });

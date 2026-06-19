@@ -306,9 +306,10 @@ def api_contact():
     email = data.get("email", "").strip()
     msg = data.get("msg", "").strip()
     if not email or not msg:
-        return jsonify({"error": "email and msg required"}), 400
-    if "@" not in email or "." not in email.split("@")[-1]:
-        return jsonify({"error": "invalid email"}), 400
+        return jsonify({"error": "plese fil both email and msg"}), 400
+    # stricter email format check
+    if "@" not in email or "." not in email.split("@")[-1] or len(email) < 5:
+        return jsonify({"error": "wrong/unexisting email"}), 400
     entry = UserMsg.save(email, msg)
     return jsonify({"ok": True, "id": entry.get("id")})
 
