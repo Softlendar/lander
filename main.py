@@ -1,8 +1,9 @@
 import json
 import os
-import re
+import random
 import smtplib
-from datetime import datetime, timezone
+import socket
+from datetime import datetime, timedelta, timezone
 from email.mime.text import MIMEText
 
 import psycopg
@@ -14,6 +15,12 @@ load_dotenv()
 app = Flask(__name__, static_folder=".")
 
 DATABASE_URL = os.getenv("DATABASE_URL")
+
+SMTP_HOST = os.getenv("SMTP_HOST", "")
+SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
+SMTP_USER = os.getenv("SMTP_USER", "")
+SMTP_PASS = os.getenv("SMTP_PASS", "")
+SMTP_FROM = os.getenv("SMTP_FROM", SMTP_USER)
 
 
 def get_conn():
@@ -30,7 +37,6 @@ def init_db():
     try:
         with get_conn() as conn:
             with conn.cursor() as cur:
-                # Contact messages table
                 cur.execute(
                     """
                     CREATE TABLE IF NOT EXISTS user_messages (
@@ -41,7 +47,6 @@ def init_db():
                     )
                     """
                 )
-                # User profile table (single-row singleton)
                 cur.execute(
                     """
                     CREATE TABLE IF NOT EXISTS user_profiles (
@@ -49,6 +54,19 @@ def init_db():
                         username TEXT,
                         logo_url TEXT,
                         updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+                    )
+                    """
+                )
+                cur.execute(
+                    """
+                    CREATE TABLE IF NOT EXISTS user_verifications (
+                        id SERIAL PRIMARY KEY,
+                        email TEXT NOT NULL,
+                        code TEXT NOT NULL,
+                        msg TEXT NOT NULL,
+                        expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+                        verified BOOLEAN DEFAULT FALSE,
+                        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
                     )
                     """
                 )
@@ -63,7 +81,6 @@ class UserMsg:
     @staticmethod
     def save(email: str, msg: str) -> dict:
         if not DATABASE_URL:
-            # fallback: in-memory (ephemeral)
             return {
                 "id": None,
                 "time": datetime.now(timezone.utc).isoformat(),
@@ -101,10 +118,89 @@ class UserMsg:
                 ]
 
 
-# Init table on startup
+def is_real_email(email: str) -> bool:
+    """Check if email domain resolves."""
+    parts = email.split("@")
+    if len(parts) != 2:
+        return False
+    domain = parts[1]
+    try:
+        socket.getaddrinfo(domain, None, socket.AF_UNSPEC, socket.SOCK_STREAM)
+        return True
+    except Exception:
+        return False
+
+
+def generate_code() -> str:
+    return str(random.randint(1000000, 9999999))
+
+
+def send_email(to: str, subject: str, body: str) -> bool:
+    if not SMTP_HOST or not SMTP_USER or not SMTP_PASS:
+        print("[send_email] SMTP not configured")
+        return False
+    try:
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
+            server.starttls()
+            server.login(SMTP_USER, SMTP_PASS)
+            msg = MIMEText(body, "plain", "utf-8")
+            msg["Subject"] = subject
+            msg["From"] = SMTP_FROM
+            msg["To"] = to
+            server.sendmail(SMTP_FROM, [to], msg.as_string())
+        return True
+    except Exception as e:
+        print("[send_email] error:", e)
+        return False
+
+
+def save_verification(email: str, code: str, msg: str) -> bool:
+    if not DATABASE_URL:
+        return False
+    expires = datetime.now(timezone.utc) + timedelta(minutes=5)
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO user_verifications (email, code, msg, expires_at)
+                VALUES (%s, %s, %s, %s)
+                """,
+                (email, code, msg, expires),
+            )
+            conn.commit()
+    return True
+
+
+def verify_code(email: str, code: str) -> tuple:
+    if not DATABASE_URL:
+        return False, None
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT id, msg, expires_at FROM user_verifications
+                WHERE email = %s AND code = %s AND verified = FALSE
+                ORDER BY created_at DESC LIMIT 1
+                """,
+                (email, code),
+            )
+            row = cur.fetchone()
+            if not row:
+                return False, None
+            vid, msg, expires = row
+            if datetime.now(timezone.utc) > expires:
+                return False, None
+            # mark verified
+            cur.execute(
+                "UPDATE user_verifications SET verified = TRUE WHERE id = %s", (vid,)
+            )
+            conn.commit()
+            return True, msg
+    return False, None
+
+
 init_db()
 
-# Project data
 PROJECTS = {
     "softlendar": {
         "title": "Softlendar",
@@ -251,12 +347,10 @@ def api_projects():
     return jsonify(PROJECTS)
 
 
-# Dynamic project pages
 for slug in PROJECTS:
     app.add_url_rule(f"/{slug}", f"project_{slug}", lambda s=slug: render_project(s))
 
 
-# interType AI assistant
 @app.route("/interType", strict_slashes=False)
 def intertype_page():
     return send_from_directory(".", "intertype.html")
@@ -300,16 +394,47 @@ def intertype_chat():
     )
 
 
-@app.route("/api/contact", methods=["POST"])
-def api_contact():
+# Contact flow with verification
+@app.route("/api/contact/send-code", methods=["POST"])
+def api_contact_send_code():
     data = request.get_json() or {}
     email = data.get("email", "").strip()
     msg = data.get("msg", "").strip()
+
     if not email or not msg:
         return jsonify({"error": "plese fil both email and msg"}), 400
-    # stricter email format check
     if "@" not in email or "." not in email.split("@")[-1] or len(email) < 5:
         return jsonify({"error": "wrong/unexisting email"}), 400
+    if not is_real_email(email):
+        return jsonify({"error": "wrong/unexisting email"}), 400
+
+    code = generate_code()
+    save_verification(email, code, msg)
+
+    # send email
+    subject = "Softlendar verification code"
+    body = f"Your softlendar contact verification code is: {code}\n\nThis code expires in 5 minutes."
+    sent = send_email(email, subject, body)
+
+    if not sent:
+        return jsonify({"error": "failed to send email — check smtp config"}), 500
+    return jsonify({"ok": True}), 200
+
+
+@app.route("/api/contact/verify", methods=["POST"])
+def api_contact_verify():
+    data = request.get_json() or {}
+    email = data.get("email", "").strip()
+    code = data.get("code", "").strip()
+
+    if not email or not code:
+        return jsonify({"error": "plese fil both email and code"}), 400
+
+    ok, msg = verify_code(email, code)
+    if not ok:
+        return jsonify({"error": "wrong or expired code"}), 400
+
+    # save the message
     entry = UserMsg.save(email, msg)
     return jsonify({"ok": True, "id": entry.get("id")})
 
@@ -328,7 +453,6 @@ def api_profile_save():
         return jsonify({"error": "db not configured"}), 500
     with get_conn() as conn:
         with conn.cursor() as cur:
-            # upsert single row (id=1)
             cur.execute(
                 """
                 INSERT INTO user_profiles (id, username, logo_url)
@@ -368,7 +492,6 @@ def api_profile_delete():
     return jsonify({"ok": True})
 
 
-# Static assets
 @app.route("/<path:filename>")
 def static_files(filename):
     return send_from_directory(".", filename)

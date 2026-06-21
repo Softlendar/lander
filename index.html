@@ -317,7 +317,7 @@
             <!-- Contact Card -->
             <div class="context-card contact-card" id="contact">
                 <h2 id="head-title:contact">contact us:</h2>
-                <div class="contact-form">
+                <div class="contact-form" id="contact-form">
                     <input
                         id="user-contact-email-input"
                         class="pf-input contact-input"
@@ -331,6 +331,22 @@
                         placeholder="write your message..."
                         rows="4"
                     ></textarea>
+                    <div
+                        id="verify-wrap"
+                        style="display: none; flex-direction: column; gap: 12px"
+                    >
+                        <input
+                            id="user-contact-code-input"
+                            class="pf-input contact-input"
+                            type="text"
+                            placeholder="enter 7-digit code"
+                            maxlength="7"
+                            autocomplete="off"
+                        />
+                        <button id="contact-verify-btn" class="pf-save">
+                            Verify
+                        </button>
+                    </div>
                     <button id="contact-sv-btn" class="pf-save">Sent</button>
                 </div>
             </div>
@@ -338,9 +354,37 @@
             <div class="paws" aria-hidden="true">☀️☀️☀️</div>
             <div class="footer-note">
                 softlendar.com ❤️ — built with intercore dblogy & helped by
-                <a href="https://tamimashraf132.wixsite.com/nexmind/">nexmind</a
-                >!
+                <a href="https://tamimashraf132.wixsite.com/nexmind/"
+                    >nexmind </a
+                ><br />
+                We usually use <a href="https://proton.me/">proton</a>
+                !
             </div>
+            <a
+                href="https://proton.me"
+                class="proton-badge"
+                target="_blank"
+                rel="noopener"
+                aria-label="Protected by Proton"
+            >
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M12 2L4 6v12l8 4 8-4V6l-8-4z"
+                        fill="white"
+                        opacity="0.9"
+                    />
+                    <text
+                        x="12"
+                        y="15"
+                        text-anchor="middle"
+                        fill="#6d4aff"
+                        font-size="10"
+                        font-weight="700"
+                    >
+                        P
+                    </text>
+                </svg>
+            </a>
         </section>
 
         <!-- Interactive Red Wave -->
@@ -1491,24 +1535,42 @@
                 const msgInput = document.getElementById(
                     "user-contact-msg-input",
                 );
+                const codeInput = document.getElementById(
+                    "user-contact-code-input",
+                );
                 const saveBtn = document.getElementById("contact-sv-btn");
+                const verifyBtn = document.getElementById("contact-verify-btn");
+                const verifyWrap = document.getElementById("verify-wrap");
 
                 if (!saveBtn) return;
 
                 // feedback element
                 var feedback = document.createElement("div");
                 feedback.className = "contact-feedback";
-                saveBtn.parentNode.appendChild(feedback);
+                saveBtn.parentNode.insertBefore(feedback, saveBtn);
+
+                var pendingEmail = "";
+                var pendingMsg = "";
+
+                function showErr(text) {
+                    feedback.textContent = text;
+                    feedback.className = "contact-feedback err";
+                }
+                function showOk(text) {
+                    feedback.textContent = text;
+                    feedback.className = "contact-feedback ok";
+                }
 
                 saveBtn.addEventListener("click", function () {
                     var email = emailInput.value.trim();
                     var msg = msgInput.value.trim();
                     if (!email || !msg) {
-                        feedback.textContent = "plese fil both email and msg";
-                        feedback.className = "contact-feedback err";
+                        showErr("plese fil both email and msg");
                         return;
                     }
-                    fetch("/api/contact", {
+                    pendingEmail = email;
+                    pendingMsg = msg;
+                    fetch("/api/contact/send-code", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ email: email, msg: msg }),
@@ -1521,19 +1583,67 @@
                             }
                             return r.json();
                         })
-                        .then(function () {
-                            feedback.textContent =
-                                "msg sv! we wil reply via ur email";
-                            feedback.className = "contact-feedback ok";
-                            emailInput.value = "";
-                            msgInput.value = "";
+                        .then(function (data) {
+                            if (data.ok) {
+                                showOk("code sent! check ur email");
+                                emailInput.style.display = "none";
+                                msgInput.style.display = "none";
+                                saveBtn.style.display = "none";
+                                verifyWrap.style.display = "flex";
+                            } else {
+                                throw new Error(data.error || "failed to send");
+                            }
                         })
                         .catch(function (err) {
-                            feedback.textContent =
-                                err.message || "smthn went wrong — try latr";
-                            feedback.className = "contact-feedback err";
+                            showErr(
+                                err.message || "smthn went wrong — try latr",
+                            );
                         });
                 });
+
+                if (verifyBtn) {
+                    verifyBtn.addEventListener("click", function () {
+                        var code = codeInput.value.trim();
+                        if (!code) {
+                            showErr("plese enter the code");
+                            return;
+                        }
+                        fetch("/api/contact/verify", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                email: pendingEmail,
+                                code: code,
+                            }),
+                        })
+                            .then(function (r) {
+                                if (!r.ok) {
+                                    return r.json().then(function (data) {
+                                        throw new Error(
+                                            data.error || "verify failed",
+                                        );
+                                    });
+                                }
+                                return r.json();
+                            })
+                            .then(function () {
+                                showOk("msg sv! we wil reply via ur email");
+                                emailInput.value = "";
+                                msgInput.value = "";
+                                codeInput.value = "";
+                                emailInput.style.display = "";
+                                msgInput.style.display = "";
+                                saveBtn.style.display = "";
+                                verifyWrap.style.display = "none";
+                            })
+                            .catch(function (err) {
+                                showErr(
+                                    err.message ||
+                                        "smthn went wrong — try latr",
+                                );
+                            });
+                    });
+                }
             })();
         </script>
     </body>

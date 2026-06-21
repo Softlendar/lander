@@ -1890,6 +1890,36 @@ body {
     box-shadow: 0 4px 16px rgba(255, 60, 127, 0.35);
 }
 
+/* ---------- PROTON BADGE ---------- */
+.proton-badge {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 900;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #6d4aff, #8b5cf6);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 16px rgba(109, 74, 255, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    animation: alarmPulse 1.2s ease-in-out infinite;
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s;
+}
+.proton-badge:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 22px rgba(109, 74, 255, 0.5);
+}
+.proton-badge svg {
+    width: 28px;
+    height: 28px;
+}
+
 /* ---------- CONTACT FORM ---------- */
 .contact-form {
     display: flex;

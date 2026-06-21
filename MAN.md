@@ -145,6 +145,11 @@ Kep this man handy so you don't forget!
 - created `logo/` directory; moved all `*_logo.svg` files into it
 - updated references in `index.html`, `intertype.html`, `project.html`, `add_nav.py`
 
+### var:10-fix — stricter email validation on contact form
+
+- main.py — `POST /api/contact` returns `"wrong/unexisting email"` for bad emails (missing @, missing dot, too short)
+- index.html — frontend parses backend error JSON and displays exact message to user
+
 ### var:10 — contact form + PostgreSQL data store
 
 - index.html — contact card (`user-contact-email-input`, `user-contact-msg-input`, `contact-sv-btn`) added with email + message fields; JS posts to `/api/contact`
