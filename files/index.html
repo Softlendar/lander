@@ -1535,12 +1535,7 @@
                 const msgInput = document.getElementById(
                     "user-contact-msg-input",
                 );
-                const codeInput = document.getElementById(
-                    "user-contact-code-input",
-                );
                 const saveBtn = document.getElementById("contact-sv-btn");
-                const verifyBtn = document.getElementById("contact-verify-btn");
-                const verifyWrap = document.getElementById("verify-wrap");
 
                 if (!saveBtn) return;
 
@@ -1548,9 +1543,6 @@
                 var feedback = document.createElement("div");
                 feedback.className = "contact-feedback";
                 saveBtn.parentNode.insertBefore(feedback, saveBtn);
-
-                var pendingEmail = "";
-                var pendingMsg = "";
 
                 function showErr(text) {
                     feedback.textContent = text;
@@ -1568,8 +1560,6 @@
                         showErr("plese fil both email and msg");
                         return;
                     }
-                    pendingEmail = email;
-                    pendingMsg = msg;
                     fetch("/api/contact/send-code", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
@@ -1585,11 +1575,13 @@
                         })
                         .then(function (data) {
                             if (data.ok) {
-                                showOk("code sent! check ur email");
-                                emailInput.style.display = "none";
-                                msgInput.style.display = "none";
-                                saveBtn.style.display = "none";
-                                verifyWrap.style.display = "flex";
+                                if (data.trusted) {
+                                    showOk("msg sv! we wil reply via ur email");
+                                } else {
+                                    showOk("check ur email to confirm ur msg");
+                                }
+                                emailInput.value = "";
+                                msgInput.value = "";
                             } else {
                                 throw new Error(data.error || "failed to send");
                             }
@@ -1600,50 +1592,6 @@
                             );
                         });
                 });
-
-                if (verifyBtn) {
-                    verifyBtn.addEventListener("click", function () {
-                        var code = codeInput.value.trim();
-                        if (!code) {
-                            showErr("plese enter the code");
-                            return;
-                        }
-                        fetch("/api/contact/verify", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                                email: pendingEmail,
-                                code: code,
-                            }),
-                        })
-                            .then(function (r) {
-                                if (!r.ok) {
-                                    return r.json().then(function (data) {
-                                        throw new Error(
-                                            data.error || "verify failed",
-                                        );
-                                    });
-                                }
-                                return r.json();
-                            })
-                            .then(function () {
-                                showOk("msg sv! we wil reply via ur email");
-                                emailInput.value = "";
-                                msgInput.value = "";
-                                codeInput.value = "";
-                                emailInput.style.display = "";
-                                msgInput.style.display = "";
-                                saveBtn.style.display = "";
-                                verifyWrap.style.display = "none";
-                            })
-                            .catch(function (err) {
-                                showErr(
-                                    err.message ||
-                                        "smthn went wrong — try latr",
-                                );
-                            });
-                    });
-                }
             })();
         </script>
     </body>

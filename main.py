@@ -2,6 +2,7 @@ import json
 import os
 import random
 import time
+import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta, timezone
 
@@ -40,7 +41,8 @@ def init_db():
                         id SERIAL PRIMARY KEY,
                         time TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
                         email TEXT NOT NULL,
-                        msg TEXT NOT NULL
+                        msg TEXT NOT NULL,
+                        status TEXT DEFAULT 'pending'
                     )
                     """
                 )
@@ -67,6 +69,22 @@ def init_db():
                     )
                     """
                 )
+                cur.execute(
+                    """
+                    CREATE TABLE IF NOT EXISTS trusted_emails (
+                        id SERIAL PRIMARY KEY,
+                        email TEXT NOT NULL UNIQUE,
+                        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+                    )
+                    """
+                )
+                # migrate old tables: add status column if missing
+                try:
+                    cur.execute(
+                        "ALTER TABLE user_messages ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'approved'"
+                    )
+                except Exception:
+                    pass
                 conn.commit()
         print("[init_db] tables ready")
     except Exception as e:
@@ -76,19 +94,20 @@ def init_db():
 
 class UserMsg:
     @staticmethod
-    def save(email: str, msg: str) -> dict:
+    def save(email: str, msg: str, status: str = "pending") -> dict:
         if not DATABASE_URL:
             return {
                 "id": None,
                 "time": datetime.now(timezone.utc).isoformat(),
                 "email": email,
                 "msg": msg,
+                "status": status,
             }
         with get_conn() as conn:
             with conn.cursor() as cur:
                 cur.execute(
-                    "INSERT INTO user_messages (email, msg) VALUES (%s, %s) RETURNING id, time",
-                    (email, msg),
+                    "INSERT INTO user_messages (email, msg, status) VALUES (%s, %s, %s) RETURNING id, time",
+                    (email, msg, status),
                 )
                 row = cur.fetchone()
                 conn.commit()
@@ -97,6 +116,7 @@ class UserMsg:
                     "time": row[1].isoformat(),
                     "email": email,
                     "msg": msg,
+                    "status": status,
                 }
 
     @staticmethod
@@ -106,13 +126,51 @@ class UserMsg:
         with get_conn() as conn:
             with conn.cursor() as cur:
                 cur.execute(
-                    "SELECT id, time, email, msg FROM user_messages ORDER BY time DESC"
+                    "SELECT id, time, email, msg, status FROM user_messages ORDER BY time DESC"
                 )
                 rows = cur.fetchall()
                 return [
-                    {"id": r[0], "time": r[1].isoformat(), "email": r[2], "msg": r[3]}
+                    {"id": r[0], "time": r[1].isoformat(), "email": r[2], "msg": r[3], "status": r[4] or "approved"}
                     for r in rows
                 ]
+
+    @staticmethod
+    def update_status(msg_id: int, status: str) -> bool:
+        if not DATABASE_URL:
+            return False
+        with get_conn() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "UPDATE user_messages SET status = %s WHERE id = %s",
+                    (status, msg_id),
+                )
+                conn.commit()
+                return cur.rowcount > 0
+
+
+def is_trusted_email(email: str) -> bool:
+    if not DATABASE_URL:
+        return False
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT 1 FROM trusted_emails WHERE email = %s", (email,))
+            return cur.fetchone() is not None
+
+
+def add_trusted_email(email: str) -> bool:
+    if not DATABASE_URL:
+        return False
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            try:
+                cur.execute(
+                    "INSERT INTO trusted_emails (email) VALUES (%s) ON CONFLICT (email) DO NOTHING",
+                    (email,),
+                )
+                conn.commit()
+                return True
+            except Exception:
+                return False
 
 
 def is_real_email(email: str) -> bool:
@@ -416,7 +474,7 @@ def intertype_chat():
     )
 
 
-# Contact flow with verification
+# Contact flow with email confirmation
 @app.route("/api/contact/send-code", methods=["POST"])
 def api_contact_send_code():
     data = request.get_json() or {}
@@ -430,41 +488,98 @@ def api_contact_send_code():
     if not is_real_email(email):
         return jsonify({"error": "wrong/unexisting email"}), 400
 
-    # Rate limit: 1 code per email per 60 seconds
-    now = time.time()
-    if email in _rate_limit and now - _rate_limit[email] < 60:
-        return jsonify(
-            {"error": "plese wwt 60 seconds before requesting another code"}
-        ), 429
-    _rate_limit[email] = now
+    # Check if email is already trusted — if yes, save immediately
+    if is_trusted_email(email):
+        entry = UserMsg.save(email, msg, status="approved")
+        return jsonify({"ok": True, "id": entry.get("id"), "trusted": True}), 200
 
-    code = generate_code()
-    save_verification(email, code, msg)
+    # Save as pending
+    entry = UserMsg.save(email, msg, status="pending")
+    msg_id = entry["id"]
 
-    # send email
-    subject = "Softlendar verification code"
-    body = f"Your softlendar contact verification code is: {code}\n\nThis code expires in 5 minutes."
+    # Build confirmation email with Yes/No links
+    confirm_url = request.url_root.rstrip("/")
+    yes_link = f"{confirm_url}/api/contact/confirm?msg_id={msg_id}&action=yes&email={urllib.parse.quote(email)}"
+    no_link = f"{confirm_url}/api/contact/confirm?msg_id={msg_id}&action=no&email={urllib.parse.quote(email)}"
+
+    subject = "Did you send this message to Softlendar?"
+    body = (
+        "Hello!\n\n"
+        "Someone sent a message to softlendar.com using this email address.\n\n"
+        "Message:\n" + msg + "\n\n"
+        "Did you send this message through our contact form?\n\n"
+        "YES: " + yes_link + "\n\n"
+        "NO:  " + no_link + "\n\n"
+        "If you did not send this, please click NO and we will discard it.\n\n"
+        "— Softlendar Team"
+    )
+
     sent = send_email(email, subject, body)
-
     if not sent:
-        return jsonify({"error": "failed to send email — check smtp config"}), 500
-    return jsonify({"ok": True}), 200
+        # Email failed — still save but notify user
+        return jsonify({"ok": True, "id": msg_id, "email_sent": False}), 200
+
+    return jsonify({"ok": True, "id": msg_id, "email_sent": True}), 200
+
+
+@app.route("/api/contact/confirm", methods=["GET"])
+def api_contact_confirm():
+    msg_id = request.args.get("msg_id", "").strip()
+    action = request.args.get("action", "").strip().lower()
+    email = request.args.get("email", "").strip()
+
+    if not msg_id or not action or not email:
+        return "Invalid confirmation link.", 400
+
+    try:
+        msg_id = int(msg_id)
+    except ValueError:
+        return "Invalid message ID.", 400
+
+    if action == "yes":
+        UserMsg.update_status(msg_id, "approved")
+        add_trusted_email(email)
+
+        # Notify owner
+        send_email(
+            MAILTRAP_FROM_EMAIL,
+            "New trusted contact message",
+            f"Email {email} confirmed their message (ID: {msg_id}). Status: APPROVED + TRUSTED",
+        )
+
+        return """<!doctype html><html><head><meta charset="UTF-8"/><title>Confirmed</title>
+<style>body{font-family:sans-serif;background:#1a0a2e;color:#e0d5f0;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;}</style>
+</head><body><div><h1>Thank you!</h1><p>Your message has been confirmed. We will reply to your email soon.</p>
+<p><a href="/" style="color:#ff8c42;">Back to Softlendar</a></p></div></body></html>""", 200
+
+    elif action == "no":
+        UserMsg.update_status(msg_id, "rejected")
+
+        # Notify owner about rejection
+        send_email(
+            MAILTRAP_FROM_EMAIL,
+            "Contact message REJECTED",
+            f"Email {email} REJECTED their message (ID: {msg_id}). Status: REJECTED",
+        )
+
+        return """<!doctype html><html><head><meta charset="UTF-8"/><title>Rejected</title>
+<style>body{font-family:sans-serif;background:#1a0a2e;color:#e0d5f0;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;}</style>
+</head><body><div><h1>Apologies</h1><p>We are sorry for any inconvenience. The message has been discarded and your email has not been added to our trusted list.</p>
+<p><a href="/" style="color:#ff8c42;">Back to Softlendar</a></p></div></body></html>""", 200
+
+    return "Invalid action.", 400
 
 
 @app.route("/api/contact/verify", methods=["POST"])
 def api_contact_verify():
+    """Kept for backwards compat — immediately saves the message."""
     data = request.get_json() or {}
     email = data.get("email", "").strip()
-    code = data.get("code", "").strip()
+    msg = data.get("msg", "").strip()
 
-    if not email or not code:
-        return jsonify({"error": "plese fil both email and code"}), 400
+    if not email or not msg:
+        return jsonify({"error": "plese fil both email and msg"}), 400
 
-    ok, msg = verify_code(email, code)
-    if not ok:
-        return jsonify({"error": "wrong or expired code"}), 400
-
-    # save the message
     entry = UserMsg.save(email, msg)
     return jsonify({"ok": True, "id": entry.get("id")})
 
