@@ -228,7 +228,12 @@ def send_email(to: str, subject: str, body: str) -> bool:
             method="POST",
         )
         with urllib.request.urlopen(req, timeout=10) as resp:
+            print(f"[send_email] success status={resp.status}")
             return resp.status in (200, 201, 202)
+    except urllib.error.HTTPError as e:
+        body = e.read().decode("utf-8")
+        print(f"[send_email] HTTP error: {e.code} - {body}")
+        return False
     except Exception as e:
         print("[send_email] error:", e)
         return False
