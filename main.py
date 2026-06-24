@@ -545,11 +545,53 @@ def api_contact_confirm():
         UserMsg.update_status(msg_id, "approved")
         add_trusted_email(email)
 
-        # Notify owner
+        # Build proof report for owner
+        all_msgs = UserMsg.all()
+        user_msgs = [m for m in all_msgs if m.get("email") == email]
+        user_msgs.sort(key=lambda x: x.get("id", 0))
+        attempt_num = len(user_msgs)
+        this_msg = next((m for m in user_msgs if m.get("id") == msg_id), None)
+
+        proof_lines = [
+            f"PROOF REPORT — User Confirmed Contact",
+            f"",
+            f"User Email: {email}",
+            f"Total Messages: {attempt_num}",
+            f"This Attempt: #{attempt_num}",
+            f"",
+            f"--- All Messages from {email} ---",
+        ]
+        for i, m in enumerate(user_msgs, 1):
+            status = m.get("status", "unknown")
+            time_str = m.get("time", "unknown")
+            msg_text = m.get("msg", "")
+            proof_lines.append(f"[{i}] ID: {m.get('id')} | Time: {time_str} | Status: {status}")
+            proof_lines.append(f"    Message: {msg_text}")
+
+        proof_lines.extend([
+            f"",
+            f"--- Current Confirmation ---",
+            f"Message ID: {msg_id}",
+            f"Status: APPROVED + TRUSTED",
+            f"Confirmed At: {datetime.now(timezone.utc).isoformat()}",
+        ])
+        if this_msg:
+            proof_lines.append(f"Message Content: {this_msg.get('msg', '')}")
+
+        proof_body = "\n".join(proof_lines)
+
+        # Send proof to owner
+        send_email(
+            "proof@softlendar.com",
+            f"Proof: {email} confirmed message #{attempt_num}",
+            proof_body,
+        )
+
+        # Also notify the old address as backup
         send_email(
             MAILTRAP_FROM_EMAIL,
             "New trusted contact message",
-            f"Email {email} confirmed their message (ID: {msg_id}). Status: APPROVED + TRUSTED",
+            f"Email {email} confirmed their message (ID: {msg_id}). Status: APPROVED + TRUSTED.\n\nProof sent to proof@softlendar.com",
         )
 
         return """<!doctype html><html><head><meta charset="UTF-8"/><title>Confirmed</title>
