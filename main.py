@@ -17,7 +17,7 @@ app = Flask(__name__, static_folder="files")
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 MAILTRAP_API_TOKEN = os.getenv("MAILTRAP_API_TOKEN", "")
-MAILTRAP_FROM_EMAIL = os.getenv("MAILTRAP_FROM_EMAIL", "hello@demomailtrap.co")
+MAILTRAP_FROM_EMAIL = os.getenv("MAILTRAP_FROM_EMAIL", "hello@softlendar.com")
 MAILTRAP_FROM_NAME = os.getenv("MAILTRAP_FROM_NAME", "Softlendar")
 
 
