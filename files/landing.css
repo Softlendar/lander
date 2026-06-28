@@ -2125,9 +2125,9 @@ body {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 72px;
-    height: 72px;
-    margin: -36px 0 0 -36px;
+    width: 56px;
+    height: 56px;
+    margin: -28px 0 0 -28px;
     cursor: pointer;
     z-index: 5;
     transition: transform 0.3s ease;
@@ -2173,36 +2173,39 @@ body {
 
 /* Position slots around the ring using transform */
 .net-slot[data-pos="0"] {
-    transform: rotate(0deg) translateY(-145px) rotate(0deg);
+    transform: rotate(0deg) translateY(-175px) rotate(0deg);
 }
 .net-slot[data-pos="1"] {
-    transform: rotate(40deg) translateY(-145px) rotate(-40deg);
+    transform: rotate(36deg) translateY(-175px) rotate(-36deg);
 }
 .net-slot[data-pos="2"] {
-    transform: rotate(80deg) translateY(-145px) rotate(-80deg);
+    transform: rotate(72deg) translateY(-175px) rotate(-72deg);
 }
 .net-slot[data-pos="3"] {
-    transform: rotate(120deg) translateY(-145px) rotate(-120deg);
+    transform: rotate(108deg) translateY(-175px) rotate(-108deg);
 }
 .net-slot[data-pos="4"] {
-    transform: rotate(160deg) translateY(-145px) rotate(-160deg);
+    transform: rotate(144deg) translateY(-175px) rotate(-144deg);
 }
 .net-slot[data-pos="5"] {
-    transform: rotate(200deg) translateY(-145px) rotate(-200deg);
+    transform: rotate(180deg) translateY(-175px) rotate(-180deg);
 }
 .net-slot[data-pos="6"] {
-    transform: rotate(240deg) translateY(-145px) rotate(-240deg);
+    transform: rotate(216deg) translateY(-175px) rotate(-216deg);
 }
 .net-slot[data-pos="7"] {
-    transform: rotate(280deg) translateY(-145px) rotate(-280deg);
+    transform: rotate(252deg) translateY(-175px) rotate(-252deg);
 }
 .net-slot[data-pos="8"] {
-    transform: rotate(320deg) translateY(-145px) rotate(-320deg);
+    transform: rotate(288deg) translateY(-175px) rotate(-288deg);
+}
+.net-slot[data-pos="9"] {
+    transform: rotate(324deg) translateY(-175px) rotate(-324deg);
 }
 
 .net-slot:hover,
 .net-slot.active {
-    transform: scale(1.2) rotate(var(--slot-angle)) translateY(-145px)
+    transform: scale(1.2) rotate(var(--slot-angle)) translateY(-175px)
         rotate(calc(-1 * var(--slot-angle))) !important;
 }
 
@@ -2274,31 +2277,34 @@ body {
 }
 
 .net-dot[data-pos="0"] {
-    transform: rotate(0deg) translateY(-145px);
+    transform: rotate(0deg) translateY(-175px);
 }
 .net-dot[data-pos="1"] {
-    transform: rotate(40deg) translateY(-145px);
+    transform: rotate(40deg) translateY(-175px);
 }
 .net-dot[data-pos="2"] {
-    transform: rotate(80deg) translateY(-145px);
+    transform: rotate(80deg) translateY(-175px);
 }
 .net-dot[data-pos="3"] {
-    transform: rotate(120deg) translateY(-145px);
+    transform: rotate(120deg) translateY(-175px);
 }
 .net-dot[data-pos="4"] {
-    transform: rotate(160deg) translateY(-145px);
+    transform: rotate(160deg) translateY(-175px);
 }
 .net-dot[data-pos="5"] {
-    transform: rotate(200deg) translateY(-145px);
+    transform: rotate(200deg) translateY(-175px);
 }
 .net-dot[data-pos="6"] {
-    transform: rotate(240deg) translateY(-145px);
+    transform: rotate(240deg) translateY(-175px);
 }
 .net-dot[data-pos="7"] {
-    transform: rotate(280deg) translateY(-145px);
+    transform: rotate(280deg) translateY(-175px);
 }
 .net-dot[data-pos="8"] {
-    transform: rotate(320deg) translateY(-145px);
+    transform: rotate(288deg) translateY(-175px);
+}
+.net-dot[data-pos="9"] {
+    transform: rotate(324deg) translateY(-175px);
 }
 
 /* Responsive */
@@ -2317,10 +2323,10 @@ body {
         max-width: 360px;
     }
     .net-slot[data-pos] {
-        transform: rotate(var(--slot-angle)) translateY(-110px)
+        transform: rotate(var(--slot-angle)) translateY(-130px)
             rotate(calc(-1 * var(--slot-angle))) !important;
     }
     .net-dot[data-pos] {
-        transform: rotate(var(--slot-angle)) translateY(-110px) !important;
+        transform: rotate(var(--slot-angle)) translateY(-130px) !important;
     }
 }

@@ -17,7 +17,7 @@ app = Flask(__name__, static_folder="files")
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 MAILTRAP_API_TOKEN = os.getenv("MAILTRAP_API_TOKEN", "")
-MAILTRAP_FROM_EMAIL = os.getenv("MAILTRAP_FROM_EMAIL", "hello@softlendar.com")
+MAILTRAP_FROM_EMAIL = os.getenv("MAILTRAP_FROM_EMAIL", "noreply@softlendar.com")
 MAILTRAP_FROM_NAME = os.getenv("MAILTRAP_FROM_NAME", "Softlendar")
 
 
@@ -130,7 +130,13 @@ class UserMsg:
                 )
                 rows = cur.fetchall()
                 return [
-                    {"id": r[0], "time": r[1].isoformat(), "email": r[2], "msg": r[3], "status": r[4] or "approved"}
+                    {
+                        "id": r[0],
+                        "time": r[1].isoformat(),
+                        "email": r[2],
+                        "msg": r[3],
+                        "status": r[4] or "approved",
+                    }
                     for r in rows
                 ]
 
@@ -329,8 +335,8 @@ PROJECTS = {
     },
     "nametermer": {
         "title": "nametermer",
-        "tagline": "name + terminal",
-        "body": "A terminal tool for managing, generating, and exploring names for projects, domains, and more.",
+        "tagline": "AI domain name generator",
+        "body": "Give details about your company or project and we generate names for you to buy as a domain. Built with Python and JavaScript.",
         "stack": "Python, JavaScript",
         "live": "",
         "status": "active",
@@ -361,8 +367,8 @@ PROJECTS = {
     },
     "dobart": {
         "title": "dobart",
-        "tagline": "task management",
-        "body": "A minimal, fast task and project management tool for small teams and solo builders.",
+        "tagline": "chat + tasks, frontend like Slack, backend like Proton + powers",
+        "body": "A chatting area where every frontend is as good as Slack, and the backend is like Proton with special power and staff features. Built for teams who value privacy, speed, and real connection.",
         "stack": "Rust, HTMX, SQLite",
         "live": "",
         "status": "coming soon",
@@ -565,16 +571,20 @@ def api_contact_confirm():
             status = m.get("status", "unknown")
             time_str = m.get("time", "unknown")
             msg_text = m.get("msg", "")
-            proof_lines.append(f"[{i}] ID: {m.get('id')} | Time: {time_str} | Status: {status}")
+            proof_lines.append(
+                f"[{i}] ID: {m.get('id')} | Time: {time_str} | Status: {status}"
+            )
             proof_lines.append(f"    Message: {msg_text}")
 
-        proof_lines.extend([
-            f"",
-            f"--- Current Confirmation ---",
-            f"Message ID: {msg_id}",
-            f"Status: APPROVED + TRUSTED",
-            f"Confirmed At: {datetime.now(timezone.utc).isoformat()}",
-        ])
+        proof_lines.extend(
+            [
+                f"",
+                f"--- Current Confirmation ---",
+                f"Message ID: {msg_id}",
+                f"Status: APPROVED + TRUSTED",
+                f"Confirmed At: {datetime.now(timezone.utc).isoformat()}",
+            ]
+        )
         if this_msg:
             proof_lines.append(f"Message Content: {this_msg.get('msg', '')}")
 
@@ -594,10 +604,13 @@ def api_contact_confirm():
             f"Email {email} confirmed their message (ID: {msg_id}). Status: APPROVED + TRUSTED.\n\nProof sent to proof@softlendar.com",
         )
 
-        return """<!doctype html><html><head><meta charset="UTF-8"/><title>Confirmed</title>
+        return (
+            """<!doctype html><html><head><meta charset="UTF-8"/><title>Confirmed</title>
 <style>body{font-family:sans-serif;background:#1a0a2e;color:#e0d5f0;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;}</style>
 </head><body><div><h1>Thank you!</h1><p>Your message has been confirmed. We will reply to your email soon.</p>
-<p><a href="/" style="color:#ff8c42;">Back to Softlendar</a></p></div></body></html>""", 200
+<p><a href="/" style="color:#ff8c42;">Back to Softlendar</a></p></div></body></html>""",
+            200,
+        )
 
     elif action == "no":
         UserMsg.update_status(msg_id, "rejected")
@@ -609,10 +622,13 @@ def api_contact_confirm():
             f"Email {email} REJECTED their message (ID: {msg_id}). Status: REJECTED",
         )
 
-        return """<!doctype html><html><head><meta charset="UTF-8"/><title>Rejected</title>
+        return (
+            """<!doctype html><html><head><meta charset="UTF-8"/><title>Rejected</title>
 <style>body{font-family:sans-serif;background:#1a0a2e;color:#e0d5f0;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;}</style>
 </head><body><div><h1>Apologies</h1><p>We are sorry for any inconvenience. The message has been discarded and your email has not been added to our trusted list.</p>
-<p><a href="/" style="color:#ff8c42;">Back to Softlendar</a></p></div></body></html>""", 200
+<p><a href="/" style="color:#ff8c42;">Back to Softlendar</a></p></div></body></html>""",
+            200,
+        )
 
     return "Invalid action.", 400
 
@@ -687,6 +703,11 @@ def api_profile_delete():
 @app.route("/logo/<path:filename>")
 def logo_files(filename):
     return send_from_directory("logo", filename)
+
+
+@app.route("/roulete_wheel", strict_slashes=False)
+def roulete_wheel():
+    return send_from_directory("files", "roulete_wheel.html")
 
 
 @app.route("/<path:filename>")

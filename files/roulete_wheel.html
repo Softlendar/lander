@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Softlendar Roulette — Spin for a Project</title>
+        <link rel="stylesheet" href="landing.css" />
+        <style>
+            body {
+                background: linear-gradient(180deg, #1a0a2e 0%, #2a1a5e 100%);
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+                color: #e0d5f0;
+                overflow: hidden;
+            }
+            .roulette-container {
+                position: relative;
+                width: 420px;
+                height: 420px;
+                margin: 40px auto;
+            }
+            .wheel-wrapper {
+                width: 100%;
+                height: 100%;
+                transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+            }
+            .wheel-wrapper.spinning {
+                /* transform applied via JS */
+            }
+            .wheel-svg {
+                width: 100%;
+                height: 100%;
+                filter: drop-shadow(0 0 40px rgba(255, 140, 66, 0.15));
+            }
+            .wheel-center {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #ff8c42, #ff3c7f);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 2rem;
+                font-weight: 800;
+                color: #fff;
+                box-shadow: 0 4px 30px rgba(255, 60, 127, 0.4);
+                z-index: 10;
+                cursor: pointer;
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+            .wheel-center:hover {
+                transform: translate(-50%, -50%) scale(1.1);
+                box-shadow: 0 6px 40px rgba(255, 60, 127, 0.6);
+            }
+            .wheel-center:active {
+                transform: translate(-50%, -50%) scale(0.95);
+            }
+            .pointer {
+                position: absolute;
+                top: -20px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 0;
+                height: 0;
+                border-left: 16px solid transparent;
+                border-right: 16px solid transparent;
+                border-top: 28px solid #ff8c42;
+                z-index: 20;
+                filter: drop-shadow(0 2px 8px rgba(255, 140, 66, 0.5));
+            }
+            .spin-btn {
+                margin-top: 32px;
+                padding: 16px 48px;
+                border-radius: 40px;
+                border: none;
+                background: linear-gradient(135deg, #ff8c42, #ff3c7f);
+                color: #fff;
+                font-size: 1.2rem;
+                font-weight: 700;
+                cursor: pointer;
+                box-shadow: 0 4px 20px rgba(255, 60, 127, 0.3);
+                transition: all 0.2s ease;
+            }
+            .spin-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 28px rgba(255, 60, 127, 0.45);
+            }
+            .spin-btn:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+            .result {
+                margin-top: 24px;
+                font-size: 1.4rem;
+                font-weight: 700;
+                min-height: 2rem;
+                text-align: center;
+                opacity: 0;
+                transition: opacity 0.5s ease;
+            }
+            .result.show {
+                opacity: 1;
+            }
+            .result.haster {
+                color: #ff8c42;
+                text-shadow: 0 0 20px rgba(255, 140, 66, 0.5);
+            }
+            .result-link {
+                display: inline-block;
+                margin-top: 12px;
+                padding: 10px 28px;
+                border-radius: 30px;
+                background: linear-gradient(135deg, #ff8c42, #ff3c7f);
+                color: #fff;
+                text-decoration: none;
+                font-weight: 700;
+                box-shadow: 0 4px 16px rgba(255, 60, 127, 0.3);
+                transition: all 0.2s ease;
+            }
+            .result-link:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 24px rgba(255, 60, 127, 0.45);
+            }
+            .title {
+                font-size: 2.2rem;
+                font-weight: 800;
+                margin-bottom: 8px;
+                text-align: center;
+            }
+            .subtitle {
+                font-size: 1rem;
+                color: rgba(224, 213, 240, 0.6);
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .back-link {
+                position: absolute;
+                top: 20px;
+                left: 20px;
+                color: #ff8c42;
+                text-decoration: none;
+                font-weight: 600;
+                font-size: 0.9rem;
+                transition: opacity 0.2s;
+            }
+            .back-link:hover {
+                opacity: 0.8;
+            }
+            @media (max-width: 480px) {
+                .roulette-container {
+                    width: 300px;
+                    height: 300px;
+                }
+                .title {
+                    font-size: 1.6rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <a href="/" class="back-link"
+            >← Back to Softlendar</a
+        >
+
+        <div class="title">Softlendar Roulette</div>
+        <div class="subtitle">Spin the wheel to discover a project</div>
+
+        <div class="roulette-container">
+            <div class="pointer"></div>
+            <div class="wheel-wrapper" id="wheel">
+                <svg class="wheel-svg" viewBox="0 0 400 400" id="wheel-svg"></svg>
+            </div>
+            <div class="wheel-center" id="spin-center" title="Spin!">S</div>
+        </div>
+
+        <button class="spin-btn" id="spin-btn">🎰 SPIN</button>
+
+        <div class="result" id="result"></div>
+
+        <script>
+            (function () {
+                const projects = [
+                    { name: "Softlendar", color: "#ff8c42", slug: "softlendar" },
+                    { name: "Termirator", color: "#ff3c7f", slug: "termirator" },
+                    { name: "Catlearning", color: "#6d4aff", slug: "catlearning" },
+                    { name: "Brose", color: "#4ade80", slug: "brose" },
+                    { name: "Serch", color: "#f472b6", slug: "serch" },
+                    { name: "Haster", color: "#fbbf24", slug: "haster" },
+                    { name: "Setomoly", color: "#60a5fa", slug: "setomoly" },
+                    { name: "Wilgo", color: "#a78bfa", slug: "wilgo" },
+                    { name: "Wildo", color: "#f87171", slug: "wildo" },
+                    { name: "Nametermer", color: "#34d399", slug: "nametermer" },
+                    { name: "Dobart", color: "#fb923c", slug: "dobart" },
+                    { name: "Redarbot", color: "#e879f9", slug: "redarbot" },
+                ];
+                const count = projects.length;
+                const anglePer = 360 / count;
+                const svg = document.getElementById("wheel-svg");
+                const wheel = document.getElementById("wheel");
+                const spinBtn = document.getElementById("spin-btn");
+                const spinCenter = document.getElementById("spin-center");
+                const resultDiv = document.getElementById("result");
+                let currentRotation = 0;
+                let spinning = false;
+
+                function polarToCartesian(cx, cy, r, angleDeg) {
+                    const angleRad = ((angleDeg - 90) * Math.PI) / 180.0;
+                    return {
+                        x: cx + r * Math.cos(angleRad),
+                        y: cy + r * Math.sin(angleRad),
+                    };
+                }
+
+                function describeArc(x, y, r, startAngle, endAngle) {
+                    const start = polarToCartesian(x, y, r, endAngle);
+                    const end = polarToCartesian(x, y, r, startAngle);
+                    const largeArc = endAngle - startAngle <= 180 ? "0" : "1";
+                    return [
+                        "M",
+                        x,
+                        y,
+                        "L",
+                        start.x,
+                        start.y,
+                        "A",
+                        r,
+                        r,
+                        0,
+                        largeArc,
+                        0,
+                        end.x,
+                        end.y,
+                        "Z",
+                    ].join(" ");
+                }
+
+                // Draw wheel segments
+                const cx = 200,
+                    cy = 200,
+                    r = 190;
+                projects.forEach(function (p, i) {
+                    const start = i * anglePer;
+                    const end = (i + 1) * anglePer;
+                    const path = document.createElementNS(
+                        "http://www.w3.org/2000/svg",
+                        "path",
+                    );
+                    path.setAttribute("d", describeArc(cx, cy, r, start, end));
+                    path.setAttribute("fill", p.color);
+                    path.setAttribute("stroke", "#1a0a2e");
+                    path.setAttribute("stroke-width", "2");
+                    svg.appendChild(path);
+
+                    // Logo image (instead of text)
+                    const midAngle = start + anglePer / 2;
+                    const imgPos = polarToCartesian(cx, cy, r * 0.65, midAngle);
+                    const imgSize = 36;
+                    const img = document.createElementNS(
+                        "http://www.w3.org/2000/svg",
+                        "image",
+                    );
+                    img.setAttribute("href", "/logo/" + p.slug + "_logo.svg");
+                    img.setAttribute("x", imgPos.x - imgSize / 2);
+                    img.setAttribute("y", imgPos.y - imgSize / 2);
+                    img.setAttribute("width", imgSize);
+                    img.setAttribute("height", imgSize);
+                    img.setAttribute("transform", "rotate(" + midAngle + "," + imgPos.x + "," + imgPos.y + ")");
+                    svg.appendChild(img);
+                });
+
+                // Outer ring
+                const ring = document.createElementNS(
+                    "http://www.w3.org/2000/svg",
+                    "circle",
+                );
+                ring.setAttribute("cx", cx);
+                ring.setAttribute("cy", cy);
+                ring.setAttribute("r", r);
+                ring.setAttribute("fill", "none");
+                ring.setAttribute("stroke", "rgba(255,140,66,0.3)");
+                ring.setAttribute("stroke-width", "3");
+                svg.appendChild(ring);
+
+                function spin() {
+                    if (spinning) return;
+                    spinning = true;
+                    spinBtn.disabled = true;
+                    resultDiv.classList.remove("show", "haster");
+                    resultDiv.innerHTML = "";
+
+                    // Random spin: 5-10 full rotations + random segment
+                    const extraSpins = 5 + Math.floor(Math.random() * 5);
+                    const randomAngle = Math.floor(Math.random() * 360);
+                    const totalRotation =
+                        currentRotation + extraSpins * 360 + randomAngle;
+                    currentRotation = totalRotation;
+
+                    wheel.style.transform = "rotate(" + totalRotation + "deg)";
+
+                    // Calculate winner after spin
+                    setTimeout(function () {
+                        // Pointer is at top (0deg). Wheel rotated clockwise.
+                        // The segment at top = (360 - (totalRotation % 360)) % 360
+                        const normalized = (360 - (totalRotation % 360)) % 360;
+                        const winnerIndex = Math.floor(normalized / anglePer);
+                        const winner = projects[winnerIndex];
+
+                        spinning = false;
+                        spinBtn.disabled = false;
+
+                        if (winner.slug === "haster") {
+                            resultDiv.innerHTML =
+                                '🎉 You got <span style="color:#fbbf24;font-size:1.6rem;">Haster</span>!<br>Like Facebook, but more &amp; more &amp; more privacy.<br><a href="/haster" class="result-link">🚀 Visit Haster</a>';
+                            resultDiv.classList.add("haster");
+                            // Auto-redirect after 2 seconds
+                            setTimeout(function () {
+                                window.location.href = "/haster";
+                            }, 2000);
+                        } else {
+                            resultDiv.innerHTML =
+                                'You got <span style="color:' +
+                                winner.color +
+                                '">' +
+                                winner.name +
+                                '</span>!<br><a href="/' +
+                                winner.slug +
+                                '" class="result-link">🚀 Visit ' +
+                                winner.name +
+                                "</a>";
+                        }
+                        resultDiv.classList.add("show");
+                    }, 4000);
+                }
+
+                spinBtn.addEventListener("click", spin);
+                spinCenter.addEventListener("click", spin);
+            })();
+        </script>
+    </body>
+</html>
