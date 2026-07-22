@@ -706,7 +706,10 @@ body {
 
 .hero-nav-links {
     display: flex;
-    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    max-width: 95vw;
 }
 
 .hero-nav-link {
@@ -1174,12 +1177,34 @@ body {
     }
 
     .hero-nav {
-        padding: 8px 12px;
+        padding: 8px 10px;
+        border-radius: 28px;
+        gap: 4px;
+    }
+
+    .hero-nav-links {
+        gap: 4px;
     }
 
     .hero-nav-link {
-        padding: 6px 10px;
-        font-size: 0.75rem;
+        padding: 5px 8px;
+        font-size: 0.72rem;
+    }
+}
+
+@media (max-width: 430px) {
+    .hero-nav {
+        padding: 6px 8px;
+        border-radius: 24px;
+    }
+
+    .hero-nav-links {
+        gap: 2px;
+    }
+
+    .hero-nav-link {
+        padding: 4px 6px;
+        font-size: 0.65rem;
     }
 }
 
@@ -2155,14 +2180,21 @@ body {
 }
 
 @keyframes slotCounterSpin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(-360deg); }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(-360deg);
+    }
 }
 
 .net-slot:hover .net-slot-inner,
 .net-slot.active .net-slot-inner {
     border-color: #ff8c42;
-    box-shadow: 0 0 30px rgba(255, 140, 66, 0.6), 0 0 60px rgba(255, 60, 127, 0.3), 0 8px 30px rgba(255, 140, 66, 0.35);
+    box-shadow:
+        0 0 30px rgba(255, 140, 66, 0.6),
+        0 0 60px rgba(255, 60, 127, 0.3),
+        0 8px 30px rgba(255, 140, 66, 0.35);
     background: rgba(255, 140, 66, 0.15);
 }
 

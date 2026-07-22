@@ -172,4 +172,19 @@ Kep this man handy so you don't forget!
 - `main.py` — added `time` import; fixed `is_real_email()` to use regex + MX record lookup (dnspython) with graceful fallback; added `_rate_limit` in-memory store + rate limiting (60s per email) on `/api/contact/send-code`; added `/logo/<path:filename>` route to serve root `logo/` directory; fixed `/` prefix on project detail CSS/logo paths
 - `files/project.html` — changed relative paths (`landing.css`, `logo/...`) to absolute paths (`/landing.css`, `/logo/...`) so they resolve correctly on project detail pages
 - `requirements.txt` — added `dnspython==2.6.1` for MX record email validation
-- compiled `main.py` successfully with `python3 -m py_compile`
+### var:12 — careers + roulette referral + dept guide + 5d cooldown + other roles off + all buttons/links disabled
+
+- `files/career.html` — career page with departments (Frontend, Backend, Design) with pay tags ($86, $238, $65/mo), referral program, hiring status "No openings right now", disabled apply badge, "Other Roles" section with Product Manager / Project Manager / Customer Support Lead marked OFF FOR NOW, link to `/department_guide`
+- `files/department_guide.html` — department program guide with hiring process (4 steps), compensation tags per department, "No openings right now" on each card, benefits list
+- `files/roulette_wheel.html` — roulette with email-based cooldown (5d:16h:32m), generated project links, feedback input, referral link checker with email ownership verification, referral bonus auto-claim
+- `main.py` — OOP refactor with DatabaseService, EmailService, ProjectService, ContactService, ChatService; referral tables (`referral_codes`, `referral_visits`), roulette tables (`roulette_tokens`, `roulette_feedback`, `roulette_spins`); routes: `/career`, `/department_guide`, `/refer/<code>`, `/api/referral/*`, `/api/roulette/*`; in-memory fallbacks for dev
+- `files/index.html` — nav links for Network, Careers, Roulette; resume page logo fix
+- `files/landing.css` — responsive nav with flex-wrap, mobile breakpoints
+
+### var:15 — resume page, resume PDF, utility scripts, roulette rename, .gitignore
+
+- `files/resume.html` — personal resume page with owner logo, skills, experience, and contact
+- `"InD — Resume.pdf"` — downloadable resume PDF added
+- `script/*.py` — utility scripts for incremental site updates (add_resume_route, add_roulete_route, add_roulette_nav, fix_dobart, fix_dobart_ring, fix_nametermer, fix_roulette_logos, fix_roulette_spelling, refactor_main, add_dobart_slot)
+- `files/roulete_wheel.html` → `files/roulette_wheel.html` — fixed spelling and rebuilt with email cooldown, referral links, and project generation
+- `.gitignore` — updated exclusions

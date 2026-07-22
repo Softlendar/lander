@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Department Program Guide — Softlendar</title>
+        <link rel="icon" href="logo/owner.svg" />
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                font-family:
+                    system-ui,
+                    -apple-system,
+                    "Segoe UI",
+                    Roboto,
+                    sans-serif;
+                background: linear-gradient(180deg, #1a0a2e 0%, #2a1a5e 100%);
+                color: #e0d5f0;
+                min-height: 100vh;
+                padding: 48px 24px;
+                line-height: 1.7;
+            }
+            .container {
+                max-width: 800px;
+                margin: 0 auto;
+            }
+            header {
+                text-align: center;
+                margin-bottom: 48px;
+            }
+            .logo {
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                margin: 0 auto 20px;
+                background: #90ee90;
+                padding: 8px;
+            }
+            h1 {
+                font-size: 2.2rem;
+                font-weight: 800;
+                color: #fff;
+                margin-bottom: 8px;
+            }
+            .subtitle {
+                font-size: 1.1rem;
+                color: rgba(224, 213, 240, 0.6);
+            }
+            section {
+                margin-bottom: 48px;
+            }
+            h2 {
+                font-size: 1.4rem;
+                font-weight: 700;
+                color: #ff8c42;
+                margin-bottom: 20px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .card {
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid rgba(255, 140, 66, 0.12);
+                border-radius: 16px;
+                padding: 24px;
+                margin-bottom: 16px;
+                transition: all 0.3s ease;
+            }
+            .card:hover {
+                border-color: rgba(255, 140, 66, 0.3);
+                background: rgba(255, 140, 66, 0.05);
+                transform: translateY(-2px);
+            }
+            .dept-name {
+                font-weight: 700;
+                font-size: 1.1rem;
+                color: #fff;
+                margin-bottom: 8px;
+            }
+            .dept-desc {
+                font-size: 0.95rem;
+                color: rgba(224, 213, 240, 0.65);
+                margin-bottom: 12px;
+            }
+            .dept-list {
+                padding-left: 20px;
+                font-size: 0.9rem;
+                color: rgba(224, 213, 240, 0.6);
+            }
+            .dept-list li {
+                margin-bottom: 6px;
+            }
+            .highlight {
+                color: #90ee90;
+                font-weight: 600;
+            }
+            .process-step {
+                display: flex;
+                gap: 16px;
+                margin-bottom: 20px;
+                align-items: flex-start;
+            }
+            .step-num {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #ff8c42, #ff3c7f);
+                color: #fff;
+                font-weight: 800;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            }
+            .step-body {
+                flex: 1;
+            }
+            .step-title {
+                font-weight: 700;
+                color: #fff;
+                margin-bottom: 4px;
+            }
+            .step-desc {
+                font-size: 0.9rem;
+                color: rgba(224, 213, 240, 0.6);
+            }
+            .back {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                margin-top: 32px;
+                padding: 10px 24px;
+                border-radius: 40px;
+                background: linear-gradient(135deg, #ff8c42, #ff3c7f);
+                color: #fff;
+                font-weight: 600;
+                font-size: 0.9rem;
+                text-decoration: none;
+                box-shadow: 0 4px 16px rgba(255, 60, 127, 0.3);
+                transition: all 0.2s ease;
+            }
+            .back:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 24px rgba(255, 60, 127, 0.45);
+            }
+            .pay-tag {
+                display: inline-block;
+                margin-top: 10px;
+                padding: 4px 14px;
+                border-radius: 20px;
+                background: rgba(144, 238, 144, 0.1);
+                color: #90ee90;
+                font-weight: 700;
+                font-size: 0.9rem;
+            }
+            .btn {
+                display: inline-block;
+                padding: 10px 24px;
+                border-radius: 40px;
+                background: linear-gradient(135deg, #ff8c42, #ff3c7f);
+                color: #fff;
+                font-weight: 600;
+                font-size: 0.9rem;
+                text-decoration: none;
+                border: none;
+                cursor: pointer;
+                box-shadow: 0 4px 16px rgba(255, 60, 127, 0.3);
+                transition: all 0.2s ease;
+            }
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 24px rgba(255, 60, 127, 0.45);
+            }
+            @media (max-width: 480px) {
+                h1 {
+                    font-size: 1.8rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <img class="logo" src="logo/owner.svg" alt="Softlendar" />
+                <h1>Department Program Guide</h1>
+                <p class="subtitle">
+                    How we hire, what we expect, and what you get
+                </p>
+            </header>
+
+            <section>
+                <h2>🏢 Departments</h2>
+                <div class="card">
+                    <div class="dept-name">✏️ Frontend</div>
+                    <div class="dept-desc">
+                        Builds the face of every Softlendar product. You'll work
+                        with HTML, CSS, JS, SVG, and whatever makes the
+                        experience smooth.
+                    </div>
+                    <ul class="dept-list">
+                        <li>
+                            Stack: HTML, CSS, JavaScript, SVG, responsive design
+                        </li>
+                        <li>Focus: accessibility, performance, animations</li>
+                        <li>Projects: softlendar.com, termirator, brose</li>
+                    </ul>
+                    <div class="pay-tag">💰 $86 / month</div>
+                    <div
+                        class="dept-desc"
+                        style="margin-top: 8px; color: rgba(224, 213, 240, 0.4)"
+                    >
+                        😴 No openings right now
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="dept-name">⚙️ Backend</div>
+                    <div class="dept-desc">
+                        Ships reliable APIs and database architecture that
+                        powers the ecosystem.
+                    </div>
+                    <ul class="dept-list">
+                        <li>Stack: Python/Flask, Ruby on Rails, PostgreSQL</li>
+                        <li>Focus: APIs, auth, email, rate limiting</li>
+                        <li>
+                            Projects: softlendar API, catlearning.fyi backend
+                        </li>
+                    </ul>
+                    <div class="pay-tag">💰 $238 / month</div>
+                    <div
+                        class="dept-desc"
+                        style="margin-top: 8px; color: rgba(224, 213, 240, 0.4)"
+                    >
+                        😴 No openings right now
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="dept-name">🎨 Design</div>
+                    <div class="dept-desc">
+                        Creates logos, icons, visual identity, and brand assets.
+                        SVG-first, lightweight, original.
+                    </div>
+                    <ul class="dept-list">
+                        <li>Stack: SVG, Figma (optional), raw code</li>
+                        <li>Focus: logos, icons, brand consistency</li>
+                        <li>
+                            Projects: owner.svg, product logos, landing visuals
+                        </li>
+                    </ul>
+                    <div class="pay-tag">💰 $65 / month</div>
+                    <div
+                        class="dept-desc"
+                        style="margin-top: 8px; color: rgba(224, 213, 240, 0.4)"
+                    >
+                        😴 No openings right now
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>📋 Hiring Process</h2>
+                <div class="process-step">
+                    <div class="step-num">1</div>
+                    <div class="step-body">
+                        <div class="step-title">Apply via Email</div>
+                        <div class="step-desc">
+                            Send your intro + relevant work to
+                            <span class="highlight"
+                                >partners@softlendar.com</span
+                            >. Mention the role in the subject.
+                        </div>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <div class="step-num">2</div>
+                    <div class="step-body">
+                        <div class="step-title">Async Review</div>
+                        <div class="step-desc">
+                            We review within 48 hours. No whiteboards. We look
+                            at real work, not resumes.
+                        </div>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <div class="step-num">3</div>
+                    <div class="step-body">
+                        <div class="step-title">Small Task</div>
+                        <div class="step-desc">
+                            If interested, we send a tiny scoped task (2–4 hours
+                            max). Paid if we use it.
+                        </div>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <div class="step-num">4</div>
+                    <div class="step-body">
+                        <div class="step-title">Contract Offer</div>
+                        <div class="step-desc">
+                            Remote, flexible hours, paid in crypto or fiat. You
+                            pick.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>🎁 What You Get</h2>
+                <div class="card">
+                    <ul class="dept-list">
+                        <li>
+                            <span class="highlight">Remote forever</span> — work
+                            from anywhere
+                        </li>
+                        <li>
+                            <span class="highlight">Flexible hours</span> —
+                            async by default
+                        </li>
+                        <li>
+                            <span class="highlight">Referral bonuses</span> —
+                            bring friends, earn spins
+                        </li>
+                        <li>
+                            <span class="highlight">Learning budget</span> —
+                            courses, tools, books
+                        </li>
+                        <li>
+                            <span class="highlight">GitHub credit</span> — your
+                            work is public and credited
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <h2>📬 Ready?</h2>
+                <div class="card">
+                    <div class="dept-desc" style="margin-bottom: 16px">
+                        Pick a department above, gather your best work, and send
+                        it over.
+                    </div>
+                    <div
+                        style="
+                            display: inline-block;
+                            padding: 10px 24px;
+                            border-radius: 40px;
+                            background: rgba(255, 255, 255, 0.06);
+                            color: rgba(224, 213, 240, 0.35);
+                            font-weight: 600;
+                            font-size: 0.9rem;
+                            border: 1px solid rgba(255, 255, 255, 0.1);
+                            cursor: not-allowed;
+                        "
+                    >
+                        Apply Now
+                    </div>
+                    <div class="dept-desc" style="margin-top: 12px">
+                        Questions?
+                        <a
+                            href="mailto:partners@softlendar.com"
+                            style="color: #ff8c42"
+                            >partners@softlendar.com</a
+                        >
+                    </div>
+                </div>
+            </section>
+
+            <a href="/career" class="back">← Back to Careers</a>
+        </div>
+    </body>
+</html>

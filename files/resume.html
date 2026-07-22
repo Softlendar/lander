@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>InD — Resume</title>
+        <link rel="icon" href="logo/owner.svg" />
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                font-family:
+                    system-ui,
+                    -apple-system,
+                    "Segoe UI",
+                    Roboto,
+                    sans-serif;
+                background: linear-gradient(180deg, #1a0a2e 0%, #2a1a5e 100%);
+                color: #e0d5f0;
+                min-height: 100vh;
+                padding: 48px 24px;
+                line-height: 1.7;
+            }
+            .container {
+                max-width: 720px;
+                margin: 0 auto;
+            }
+            header {
+                text-align: center;
+                margin-bottom: 48px;
+            }
+            .avatar {
+                width: 96px;
+                height: 96px;
+                border-radius: 50%;
+                margin: 0 auto 20px;
+                box-shadow: 0 8px 32px rgba(255, 60, 127, 0.3);
+                object-fit: cover;
+                background: #90ee90;
+            }
+            h1 {
+                font-size: 2.2rem;
+                font-weight: 800;
+                color: #fff;
+                margin-bottom: 4px;
+            }
+            .tagline {
+                font-size: 1.1rem;
+                color: rgba(224, 213, 240, 0.6);
+                margin-bottom: 16px;
+            }
+            .contact-row {
+                display: flex;
+                gap: 16px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .contact-row a {
+                color: #ff8c42;
+                text-decoration: none;
+                font-weight: 600;
+                font-size: 0.9rem;
+                transition: opacity 0.2s;
+            }
+            .contact-row a:hover {
+                opacity: 0.8;
+            }
+            section {
+                margin-bottom: 40px;
+            }
+            h2 {
+                font-size: 1.3rem;
+                font-weight: 700;
+                color: #ff8c42;
+                margin-bottom: 16px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .project-grid {
+                display: grid;
+                gap: 12px;
+            }
+            .project-card {
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid rgba(255, 140, 66, 0.12);
+                border-radius: 16px;
+                padding: 20px;
+                transition: all 0.3s ease;
+            }
+            .project-card:hover {
+                border-color: rgba(255, 140, 66, 0.3);
+                background: rgba(255, 140, 66, 0.05);
+                transform: translateY(-2px);
+            }
+            .project-name {
+                font-weight: 700;
+                font-size: 1.05rem;
+                color: #fff;
+                margin-bottom: 4px;
+            }
+            .project-desc {
+                font-size: 0.9rem;
+                color: rgba(224, 213, 240, 0.6);
+            }
+            .skills {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .skill {
+                padding: 6px 14px;
+                border-radius: 20px;
+                font-size: 0.85rem;
+                font-weight: 600;
+                background: rgba(255, 140, 66, 0.1);
+                color: #ff8c42;
+                border: 1px solid rgba(255, 140, 66, 0.2);
+            }
+            .back {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                margin-top: 32px;
+                padding: 10px 24px;
+                border-radius: 40px;
+                background: linear-gradient(135deg, #ff8c42, #ff3c7f);
+                color: #fff;
+                font-weight: 600;
+                font-size: 0.9rem;
+                text-decoration: none;
+                box-shadow: 0 4px 16px rgba(255, 60, 127, 0.3);
+                transition: all 0.2s ease;
+            }
+            .back:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 24px rgba(255, 60, 127, 0.45);
+            }
+            @media (max-width: 480px) {
+                h1 {
+                    font-size: 1.8rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <img class="avatar" src="logo/owner.svg" alt="InD logo" />
+                <h1></h1>
+                <p class="tagline">
+                    Builder of Softlendar — science, stars, cats, code
+                </p>
+                <div class="contact-row">
+                    <a href="mailto:intercoredblogy@softlendar.com">📧 Email</a>
+                    <a
+                        href="https://github.com/intercoredblogy/"
+                        target="_blank"
+                        rel="noopener"
+                        >💻 GitHub</a
+                    >
+                    <a
+                        href="https://softlendar.com/"
+                        target="_blank"
+                        rel="noopener"
+                        >🌐 Website</a
+                    >
+                </div>
+            </header>
+
+            <section>
+                <h2>🚀 Projects</h2>
+                <div class="project-grid">
+                    <div class="project-card">
+                        <div class="project-name">Softlendar</div>
+                        <div class="project-desc">
+                            Ecosystem of interactive web experiences — science,
+                            stars, cats, code. Flask, PostgreSQL, Mailtrap.
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-name">catlearning.fyi</div>
+                        <div class="project-desc">
+                            Cat-themed learning app with AI assistant. Ruby on
+                            Rails 8, PostgreSQL.
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-name">termirator</div>
+                        <div class="project-desc">
+                            Terminal-style interactive web app with power
+                            commands and cyberpunk HUD.
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-name">brose</div>
+                        <div class="project-desc">
+                            Lightweight, warm-themed browser concept for
+                            exploring the Softlendar ecosystem.
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-name">serch</div>
+                        <div class="project-desc">
+                            Privacy-first search engine for Softlendar projects
+                            and the wider web.
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-name">haster</div>
+                        <div class="project-desc">
+                            Social network with more & more & more privacy — no
+                            tracking, no ads.
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-name">setomoly</div>
+                        <div class="project-desc">
+                            Cosmic survival game in the abyss. Rust,
+                            WebAssembly, WebGL.
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-name">wilgo + wildo</div>
+                        <div class="project-desc">
+                            Friendly systems programming language and its web
+                            framework. Rust, LLVM.
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-name">nametermer</div>
+                        <div class="project-desc">
+                            AI domain name generator — give details, get names
+                            to buy.
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-name">dobart</div>
+                        <div class="project-desc">
+                            Chat + tasks area with Slack-like frontend and
+                            Proton-powered backend.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>🛠️ Skills</h2>
+                <div class="skills">
+                    <span class="skill">code</span>
+                    <span class="skill">manage hosting provider</span>
+                    <span class="skill">use AI agent</span>
+                    <span class="skill">setup pg</span>
+                    <span class="skill">at backend</span>
+                    <span class="skill">at frontend</span>
+                    <span class="skill">research</span>
+                    <span class="skill">patient</span>
+                    <span class="skill">read code using methods</span>
+                    <span class="skill">create img/logo using svg</span>
+                </div>
+            </section>
+
+            <section>
+                <h2>🎯 Focus</h2>
+                <p style="color: rgba(224, 213, 240, 0.65); font-size: 0.95rem">
+                    Building privacy-first, interactive web experiences.
+                    Passionate about science, education, open source, and
+                    creating tools that respect users & badget friendly. From
+                    terminals to browsers to social networks — everything gets
+                    built with curiosity and care.
+                </p>
+            </section>
+
+            <a href="/" class="back">← Back to Softlendar</a>
+        </div>
+    </body>
+</html>
